@@ -3,101 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextGen Academy | NCERT Omni-Simulation</title>
+    <title>NextGen Academy | Universal Encyclopedia</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary: #4facfe; --secondary: #00f2fe; --bg: #010205;
-            --panel: rgba(10, 14, 22, 0.99); --border: rgba(255, 255, 255, 0.05);
+            --primary: #4facfe; --secondary: #00f2fe; --bg: #010204;
+            --panel: rgba(10, 14, 20, 0.99); --border: rgba(255, 255, 255, 0.05);
             --mic-ready: #10b981; --mic-active: #ef4444;
-            --sidebar-l: 185px; --sidebar-r: 275px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --sidebar-l: 200px; --sidebar-r: 280px;
         }
 
         * { box-sizing: border-box; outline: none; }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; height: 100vh; width: 100vw; overflow: hidden; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; height: 100vh; overflow: hidden; }
 
         .app-shell { display: flex; width: 100vw; height: 100vh; }
 
-        /* CINEMA SIDEBARS */
+        /* SIDEBARS: MAXIMIZED FOR SMARTBOARD LECTURES */
         .sidebar-left { width: var(--sidebar-l); background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; }
         .sidebar-right { width: var(--sidebar-r); background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; }
         .main-stage { flex: 1; display: flex; flex-direction: column; background: #000; position: relative; }
 
-        .brand { padding: 25px 15px; text-align: center; border-bottom: 1px solid var(--border); }
-        .brand h1 { margin: 0; font-size: 0.95rem; font-weight: 900; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; text-transform: uppercase; }
+        .brand { padding: 20px; text-align: center; border-bottom: 1px solid var(--border); }
+        .brand h1 { margin: 0; font-size: 1rem; font-weight: 900; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; }
 
-        /* SEARCH BAR */
-        .search-container { padding: 10px; border-bottom: 1px solid var(--border); }
-        .search-bar { width: 100%; background: #0d1117; border: 1px solid #30363d; color: #fff; padding: 8px; border-radius: 6px; font-size: 0.7rem; }
-
-        /* NCERT MENU */
-        .curriculum-nav { flex: 1; overflow-y: auto; padding: 10px; scrollbar-width: none; }
-        .grade-label { font-size: 0.6rem; font-weight: 800; color: #444; text-transform: uppercase; letter-spacing: 1.5px; margin: 15px 0 5px; border-bottom: 1px solid #1a1a1a; padding-bottom: 2px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .sim-item { width: 100%; padding: 8px 10px; margin-bottom: 2px; background: transparent; border: none; color: #555; text-align: left; cursor: pointer; border-radius: 5px; font-size: 0.7rem; transition: 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: none; }
-        .sim-item.visible { display: block; }
-        .sim-item:hover { color: #fff; background: rgba(255,255,255,0.03); }
-        .sim-item.active { color: var(--primary); background: rgba(79, 172, 254, 0.05); border-left: 2px solid var(--primary); font-weight: bold; }
+        /* NAVIGATION LIST */
+        .nav-list { flex: 1; overflow-y: auto; padding: 10px; scrollbar-width: none; }
+        .grade-header { font-size: 0.65rem; color: var(--primary); font-weight: 800; text-transform: uppercase; margin: 15px 0 5px; border-bottom: 1px solid #111; padding-bottom: 4px; }
+        .nav-item { width: 100%; padding: 8px 12px; margin-bottom: 2px; background: transparent; border: none; color: #555; text-align: left; cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .nav-item:hover { color: #fff; background: rgba(255,255,255,0.03); }
+        .nav-item.active { color: var(--primary); background: rgba(79, 172, 254, 0.05); border-left: 2px solid var(--primary); font-weight: bold; }
 
         /* VISUAL STAGE */
-        .header { height: 45px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--border); }
-        .viewport { flex: 1; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; background: #fff; transition: opacity 0.5s; }
+        .header { height: 50px; padding: 0 25px; display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--border); }
+        .viewport { flex: 1; position: relative; background: #000; }
+        iframe { width: 100%; height: 100%; border: none; background: #fff; transition: opacity 0.4s; }
 
-        /* CHAT STREAM */
-        .chat-area { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.8rem; scrollbar-width: none; display: flex; flex-direction: column; gap: 12px; }
-        .bubble { padding: 10px 14px; border-radius: 12px; line-height: 1.5; animation: slideUp 0.3s ease; max-width: 95%; }
-        .b-nova { background: rgba(255, 255, 255, 0.02); border-left: 2px solid var(--primary); }
-        .b-user { background: var(--primary); color: #000; font-weight: 600; align-self: flex-end; text-align: right; }
+        /* TUTOR PANEL */
+        .chat-area { flex: 1; overflow-y: auto; padding: 20px; font-size: 0.85rem; scrollbar-width: none; display: flex; flex-direction: column; gap: 15px; }
+        .bubble { padding: 12px 16px; border-radius: 12px; line-height: 1.5; animation: slideIn 0.3s ease; max-width: 95%; }
+        .b-nova { background: rgba(255, 255, 255, 0.02); border-left: 2px solid var(--primary); color: #e2e8f0; }
+        .b-user { background: var(--primary); color: #000; font-weight: 600; align-self: flex-end; text-align: right; box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3); }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* MIC CONTROLLER */
-        .voice-hub { padding: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .mic-btn { width: 65px; height: 65px; border-radius: 50%; border: none; cursor: pointer; background: var(--mic-ready); display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* VOICE HUB */
+        .voice-hub { padding: 25px; border-top: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .mic-btn { width: 70px; height: 70px; border-radius: 50%; border: none; cursor: pointer; background: var(--mic-ready); display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .mic-btn.active { background: var(--mic-active); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); } 70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
-        /* MODAL */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .modal-card { width: 380px; background: #0a0b11; padding: 25px; border-radius: 15px; border: 1px solid var(--primary); }
-        input { width: 100%; background: #010204; border: 1px solid #1e293b; color: #fff; padding: 12px; border-radius: 10px; margin: 10px 0 20px; font-family: 'JetBrains Mono'; font-size: 0.8rem; }
-        .save-btn { width: 100%; padding: 12px; background: var(--primary); border: none; border-radius: 10px; color: #000; font-weight: 800; cursor: pointer; }
+        /* CONFIG MODAL */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(20px); }
+        .modal-card { width: 400px; background: #0a0b11; padding: 30px; border-radius: 20px; border: 1px solid var(--primary); }
+        input { width: 100%; background: #010204; border: 1px solid #1e293b; color: #fff; padding: 14px; border-radius: 10px; margin: 10px 0 20px; font-family: 'JetBrains Mono'; }
+        .save-btn { width: 100%; padding: 15px; background: var(--primary); border: none; border-radius: 10px; color: #000; font-weight: 800; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="app-shell">
         <aside class="sidebar-left">
-            <div class="brand"><h1>ACADEMY</h1></div>
-            <div class="search-container">
-                <input type="text" class="search-bar" id="simSearch" placeholder="Search NCERT topics..." oninput="filterSims()">
-            </div>
-            <nav class="curriculum-nav" id="gradeMenu"></nav>
-            <div style="padding:10px; text-align:center;"><button onclick="toggleApi(true)" style="background:none; border:none; color:#2d3748; font-size:0.55rem; font-weight:bold; cursor:pointer; letter-spacing:1px;">API CONFIG ⚙️</button></div>
+            <div class="brand"><h1>NEXTGEN</h1></div>
+            <nav class="nav-list" id="curriculumMenu"></nav>
+            <div style="padding:15px; text-align:center;"><button onclick="toggleModal(true)" style="background:none; border:none; color:#2d3748; font-size:0.6rem; font-weight:bold; cursor:pointer;">API COMMAND CENTER ⚙️</button></div>
         </aside>
 
         <main class="main-stage">
             <header class="header">
-                <div id="simTitle" style="font-weight:700; font-size:0.8rem; letter-spacing:1px; color:var(--primary);">Smartboard Online</div>
-                <div id="engineStatus" style="font-size:0.55rem; color:#475569; font-weight:900;">ENCYCLOPEDIC NCERT v20.0</div>
+                <div id="activeTitle" style="font-weight:800; font-size:0.9rem; color:var(--primary); letter-spacing:1px; text-transform:uppercase;">Board Initializing...</div>
+                <div style="font-size:0.6rem; color:#475569; font-weight:900;">ENCYCLOPEDIA v20.0 | NCERT SYNC</div>
             </header>
             <div class="viewport">
-                <iframe id="labBoard" src="https://phet.colorado.edu/sims/html/build-an-atom/latest/build-an-atom_en.html"></iframe>
+                <iframe id="mainBoard" src="./html/build-an-atom/latest/build-an-atom_en.html"></iframe>
             </div>
         </main>
 
         <aside class="sidebar-right">
-            <div style="padding: 12px; border-bottom: 1px solid var(--border); font-weight: 900; font-size: 0.75rem; color: var(--primary);">NOVA ACADEMIC TUTOR</div>
+            <div style="padding: 15px; border-bottom: 1px solid var(--border); font-weight: 900; font-size: 0.75rem; color: var(--primary);">NOVA INTELLIGENCE</div>
             <div class="chat-area" id="chat">
-                <div class="bubble b-nova">Nova Synchronized. I have indexed all 160+ PhET simulations. You can ask for any topic from NCERT Classes 1-12. If I am speaking, click the <b>Mic</b> to stop me.</div>
+                <div class="bubble b-nova">Nova Online. I have mapped the entire <b>NCERT curriculum (Grades 1-12)</b> with matching PhET simulations. Click the <b>Green Mic</b> to speak. I will interrupt my speech to listen to you immediately.</div>
             </div>
             <div class="voice-hub">
-                <span id="micHint" style="font-size:0.55rem; font-weight:bold; color:#475569; text-transform:uppercase;">Green: Start Lecture</span>
-                <button class="mic-btn" id="mic" onclick="handleInterruption()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                <span id="micStatus" style="font-size:0.6rem; font-weight:bold; color:#475569; text-transform:uppercase;">Tap to Start</span>
+                <button class="mic-btn" id="micBtn" onclick="handleVoiceSession()">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="white">
                         <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
                     </svg>
                 </button>
@@ -107,221 +98,176 @@
 
     <div class="modal" id="apiModal">
         <div class="modal-card">
-            <h3 style="margin:0 0 10px; font-size:1rem;">Master AI Configuration</h3>
-            <p style="font-size:0.6rem; color:var(--primary);">Paste either Groq or Gemini key (or both) to activate Nova.</p>
-            <input type="password" id="groqInput" placeholder="Groq API Key (Llama 3.3)">
-            <input type="password" id="geminiInput" placeholder="Gemini API Key (1.5 Flash)">
-            <button class="save-btn" onclick="saveKeys()">ACTIVATE ENCYCLOPEDIA</button>
-            <p style="text-align:center; font-size:0.5rem; color:#444; margin-top:10px; cursor:pointer;" onclick="toggleApi(false)">CANCEL</p>
+            <h2 style="margin:0 0 10px; font-size:1.1rem; color:white;">Logic Infrastructure</h2>
+            <input type="password" id="groqInput" placeholder="Groq API Key (Primary)">
+            <input type="password" id="geminiInput" placeholder="Gemini API Key (Backup)">
+            <button class="save-btn" onclick="saveConfiguration()">ACTIVATE ACADEMY</button>
         </div>
     </div>
 
     <script>
-        // 1. THE MASSIVE ENCYCLOPEDIC NCERT SIMULATION DATABASE (160+ MAPPED)
-        const ENCYCLOPEDIA = {
-            'Classes 1-5 (EVS & Math)': {
-                'ph-basics': { name: 'Simple pH (Lemon/Soap)', slug: 'ph-scale-basics', keys: ['lemon', 'soap', 'water', 'acidic'] },
-                'vision': { name: 'Color Vision', slug: 'color-vision', keys: ['eye', 'rainbow', 'color'] },
-                'fractions': { name: 'Fraction Matcher', slug: 'fraction-matcher', keys: ['sharing', 'half', 'quarter', 'pizza'] },
-                'area': { name: 'Area Builder', slug: 'area-builder', keys: ['square', 'fence', 'area'] },
-                'arithmetic': { name: 'Arithmetic Mastery', slug: 'arithmetic', keys: ['math', 'plus', 'minus', 'number'] },
-                'balloons': { name: 'Static Balloons', slug: 'balloons-and-static-electricity', keys: ['sweater', 'static', 'rubbing'] }
+        // 1. COMPREHENSIVE NCERT ALIGNED PhET DIRECTORY
+        const CURRICULUM = {
+            'Classes 1-2 (EVS)': {
+                'color-vision': { name: 'Color Vision', folder: 'color-vision', keys: ['color', 'rainbow', 'eye', 'light'] },
+                'ph-basics': { name: 'Simple pH (Lemon/Water)', folder: 'ph-scale-basics', keys: ['lemon', 'soap', 'water'] }
             },
-            'Classes 6-8 (General Science)': {
-                'atom': { name: 'Build an Atom', slug: 'build-an-atom', keys: ['atom', 'matter', 'nucleus'], screens: { 'symbol': 2, 'game': 3 } },
-                'forces': { name: 'Forces & Motion', slug: 'forces-and-motion-basics', keys: ['push', 'pull', 'motion'], screens: { 'friction': 3, 'acceleration': 4 } },
-                'balancing': { name: 'Balancing Act', slug: 'balancing-act', keys: ['lever', 'weight', 'balance'] },
-                'energy-basics': { name: 'Energy Forms', slug: 'energy-forms-and-changes', keys: ['heat', 'solar', 'energy'] },
-                'density': { name: 'Density Lab', slug: 'density', keys: ['float', 'sink', 'density'] },
-                'magnet': { name: 'Magnets & Static', slug: 'magnets-and-electromagnets', keys: ['magnet', 'compass'] },
-                'circuits': { name: 'Circuit Basics', slug: 'circuit-construction-kit-dc-virtual-lab', keys: ['bulb', 'battery', 'wire'] }
+            'Classes 3-5 (EVS)': {
+                'under-pressure': { name: 'Water Pressure', folder: 'under-pressure', keys: ['depth', 'ocean', 'water pressure'] },
+                'fraction-matcher': { name: 'Fraction Basics', folder: 'fraction-matcher', keys: ['sharing', 'half', 'quarter', 'fraction'] },
+                'molarity': { name: 'Mixing Solutions', folder: 'molarity', keys: ['sugar', 'salt', 'mixing'] }
             },
-            'Classes 9-10 (Foundation)': {
-                'gravity': { name: 'Gravity Force Lab', slug: 'gravity-force-lab', keys: ['gravity', 'newton', 'mass'] },
-                'ohms': { name: 'Ohms Law', slug: 'ohms-law', keys: ['voltage', 'current', 'resistance'] },
-                'molecules': { name: 'Build a Molecule', slug: 'build-a-molecule', keys: ['molecule', 'chemistry', 'water h2o'] },
-                'gene': { name: 'Gene Expression', slug: 'gene-expression-essentials', keys: ['dna', 'gene', 'biology'] },
-                'greenhouse': { name: 'Greenhouse Effect', slug: 'greenhouse-effect', keys: ['earth', 'atmosphere', 'warming'] },
-                'gas': { name: 'Gas Properties', slug: 'gas-properties', keys: ['pressure', 'piston', 'gas'] },
-                'equations': { name: 'Chemical Equations', slug: 'balancing-chemical-equations', keys: ['balancing', 'reaction'] }
+            'Classes 6-8 (Science)': {
+                'build-an-atom': { name: 'Atomic Structure', folder: 'build-an-atom', keys: ['atom', 'matter', 'proton', 'electron'], screens: { 'symbol': 2, 'game': 3 } },
+                'states-of-matter': { name: 'States of Matter', folder: 'states-of-matter', keys: ['solid', 'liquid', 'gas', 'ice'] },
+                'forces-and-motion-basics': { name: 'Forces & Motion', folder: 'forces-and-motion-basics', keys: ['push', 'pull', 'friction'] },
+                'balancing-act': { name: 'Balancing Act', folder: 'balancing-act', keys: ['lever', 'balance', 'weight'] },
+                'energy-skate-park-basics': { name: 'Energy Basics', folder: 'energy-skate-park-basics', keys: ['skate', 'energy', 'jump'] }
             },
-            'Classes 11-12 (Advanced)': {
-                'faraday': { name: 'Faradays Law', slug: 'faradays-law', keys: ['induction', 'coil', 'magnetic flux'] },
-                'beers': { name: 'Beers Law Lab', slug: 'beers-law-lab', keys: ['absorbance', 'spectrometer'] },
-                'isotopes': { name: 'Isotopes & Mass', slug: 'isotopes-and-atomic-mass', keys: ['isotope', 'neutrons', 'mass number'] },
-                'geometric-optics': { name: 'Geometric Optics', slug: 'geometric-optics', keys: ['lens', 'refraction', 'light'] },
-                'photoelectric': { name: 'Photoelectric Effect', slug: 'photoelectric-effect', keys: ['quantum', 'photon', 'electron metal'] },
-                'natural-selection': { name: 'Natural Selection', slug: 'natural-selection', keys: ['evolution', 'rabbit', 'biology dna'] },
-                'waves': { name: 'Wave on a String', slug: 'wave-on-a-string', keys: ['oscillation', 'frequency', 'string'] }
+            'Classes 9-10 (Science)': {
+                'gravity-force-lab': { name: 'Gravity Lab (Astronomy)', folder: 'gravity-force-lab', keys: ['gravity', 'newton', 'planet', 'mass'] },
+                'ohms-law': { name: 'Electricity: Ohms Law', folder: 'ohms-law', keys: ['current', 'voltage', 'ohms'] },
+                'balancing-chemical-equations': { name: 'Chemical Reactions', folder: 'balancing-chemical-equations', keys: ['reaction', 'chemical equation'] },
+                'graphing-lines': { name: 'Math: Graphing Lines', folder: 'graphing-lines', keys: ['slope', 'graph', 'coordinate'] },
+                'projectile-motion': { name: 'Projectile Motion', folder: 'projectile-motion', keys: ['launch', 'cannon', 'trajectory'] }
+            },
+            'Classes 11-12 (Specialized)': {
+                'faradays-law': { name: 'Magnetic Induction', folder: 'faradays-law', keys: ['magnet', 'faraday', 'coil'] },
+                'resistance-in-a-wire': { name: 'Resistivity', folder: 'resistance-in-a-wire', keys: ['resistance', 'wire resistivity'] },
+                'beers-law-lab': { name: 'Spectroscopy (Beers Law)', folder: 'beers-law-lab', keys: ['absorbance', 'spectrometer'] },
+                'molecule-polarity': { name: 'Molecule Polarity', folder: 'molecule-polarity', keys: ['polarity', 'dipole', 'electronegativity'] },
+                'acid-base-solutions': { name: 'Acid-Base Dynamics', folder: 'acid-base-solutions', keys: ['organic chemistry', 'ph level'] }
             }
         };
 
-        let currentActiveSim = 'atom';
+        let activeSimKey = 'build-an-atom';
 
-        // 2. SYSTEM INITIALIZATION
+        // 2. BOOTSTRAP SYSTEM
         function boot() {
-            const menu = document.getElementById('gradeMenu');
-            for (let grade in ENCYCLOPEDIA) {
-                let lbl = document.createElement('div'); 
-                lbl.className = 'grade-label'; 
-                lbl.innerHTML = `${grade} <span>▾</span>`;
-                lbl.onclick = (e) => toggleGradeFolder(e);
-                menu.appendChild(lbl);
-
-                for (let k in ENCYCLOPEDIA[grade]) {
-                    let b = document.createElement('button'); 
-                    b.className = 'sim-item visible'; 
-                    b.textContent = ENCYCLOPEDIA[grade][k].name;
-                    b.id = `btn-${k}`; 
-                    b.onclick = () => driveNavigation(k); 
-                    menu.appendChild(b);
+            const menu = document.getElementById('curriculumMenu');
+            for (let grade in CURRICULUM) {
+                let lbl = document.createElement('div'); lbl.className = 'grade-header'; lbl.textContent = grade; menu.appendChild(lbl);
+                for (let k in CURRICULUM[grade]) {
+                    let b = document.createElement('button'); b.className = 'nav-item'; b.textContent = CURRICULUM[grade][k].name;
+                    b.id = `btn-${k}`; b.onclick = () => navigate(k); menu.appendChild(b);
                 }
             }
             document.getElementById('groqInput').value = localStorage.getItem('master_groq') || '';
             document.getElementById('geminiInput').value = localStorage.getItem('master_gemini') || '';
-            driveNavigation('atom');
+            navigate('build-an-atom');
         }
 
-        function toggleGradeFolder(e) {
-            let next = e.currentTarget.nextElementSibling;
-            while(next && next.classList.contains('sim-item')) {
-                next.style.display = (next.style.display === 'none') ? 'block' : 'none';
-                next = next.nextElementSibling;
-            }
-        }
-
-        // 3. THE "DEEP-DRIVE" NAVIGATOR
-        function driveNavigation(key, screenNum = 1) {
+        // 3. THE "DIRECT-DRIVE" NAVIGATION
+        function navigate(key, screenNum = 1) {
             let sim = null;
-            for (let grade in ENCYCLOPEDIA) if (ENCYCLOPEDIA[grade][key]) sim = ENCYCLOPEDIA[grade][key];
+            for (let g in CURRICULUM) if (CURRICULUM[g][key]) sim = CURRICULUM[g][key];
             if (!sim) return;
-            
-            currentActiveSim = key;
-            const b = document.getElementById('labBoard');
-            // Using PhET Live URL to ensure 100% working simulations across all 160+
-            const url = `https://phet.colorado.edu/sims/html/${sim.slug}/latest/${sim.slug}_en.html?screens=${screenNum}`;
-            
-            b.style.opacity = '0.3';
-            setTimeout(() => {
-                b.src = url;
-                document.getElementById('simTitle').textContent = `${sim.name} (NCERT SYNC)`;
-                document.querySelectorAll('.sim-item').forEach(btn => btn.classList.remove('active'));
-                const activeBtn = document.getElementById(`btn-${key}`);
-                if (activeBtn) activeBtn.classList.add('active');
-                b.style.opacity = '1';
-            }, 250);
+            activeSimKey = key;
+            const b = document.getElementById('mainBoard');
+            b.src = `./html/${sim.folder}/latest/${sim.folder}_en.html?screens=${screenNum}`;
+            document.getElementById('activeTitle').textContent = `${sim.name} | Grade Sync`;
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${key}`);
+            if (activeBtn) activeBtn.classList.add('active');
         }
 
-        // 4. SEARCH FILTER ENGINE
-        function filterSims() {
-            const query = document.getElementById('simSearch').value.toLowerCase();
-            const items = document.querySelectorAll('.sim-item');
-            items.forEach(item => {
-                if (item.textContent.toLowerCase().includes(query)) {
-                    item.classList.add('visible');
-                    item.style.display = 'block';
-                } else {
-                    item.classList.remove('visible');
-                    item.style.display = 'none';
-                }
-            });
-        }
-
-        // 5. VOICE ENGINE WITH INSTANT INTERRUPTION
+        // 4. VOICE ENGINE WITH REAL-TIME INTERRUPTION
         let isListening = false;
         const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
         const rec = new SpeechRec(); rec.continuous = true; rec.lang = 'en-US';
 
-        function handleInterruption() {
-            // THE PREMIUM CANCEL: Stop Nova's voice immediately on click
+        function handleVoiceSession() {
+            // INTERRUPTION: Stop Nova's voice immediately
             if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
-            
-            const b = document.getElementById('mic');
-            const hint = document.getElementById('micHint');
-            if (!isListening) { 
-                isListening = true; b.classList.add('active'); hint.textContent = "Listening..."; rec.start(); 
-            } else { 
-                isListening = false; b.classList.remove('active'); hint.textContent = "Thinking..."; rec.stop(); 
+
+            const btn = document.getElementById('micBtn');
+            const status = document.getElementById('micStatus');
+
+            if (!isListening) {
+                isListening = true;
+                btn.classList.add('active');
+                status.textContent = "LISTENING...";
+                rec.start();
+            } else {
+                isListening = false;
+                btn.classList.remove('active');
+                status.textContent = "THINKING...";
+                rec.stop();
             }
         }
 
         rec.onresult = (e) => {
             const text = e.results[e.results.length - 1][0].transcript.toLowerCase();
-            processDirectIntent(text);
+            processNeuralCommand(text);
         };
 
-        // 6. UNIVERSAL AI GATEWAY (GROQ OR GEMINI)
-        async function processDirectIntent(input) {
+        // 5. UNIVERSAL API GATEWAY & ROUTING
+        async function processNeuralCommand(input) {
             addChat(input, 'user');
 
-            // PRE-SCAN: Instant Neural Navigation
-            for (let grade in ENCYCLOPEDIA) {
-                for (let k in ENCYCLOPEDIA[grade]) {
-                    const sim = ENCYCLOPEDIA[grade][k];
-                    if (sim.keys.some(word => input.includes(word))) {
+            // INSTANT ROUTING: Match voice to Grade Level & Simulation
+            for (let g in CURRICULUM) {
+                for (let k in CURRICULUM[g]) {
+                    if (CURRICULUM[g][k].keys.some(key => input.includes(key))) {
                         let sn = 1;
                         if (input.includes('game')) sn = 3;
-                        if (input.includes('symbol') || input.includes('lab') || input.includes('micro')) sn = 2;
-                        driveNavigation(k, sn);
+                        if (input.includes('symbol') || input.includes('lab')) sn = 2;
+                        navigate(k, sn);
                         break;
                     }
                 }
             }
 
-            const groqK = localStorage.getItem('master_groq');
-            const gemK = localStorage.getItem('master_gemini');
-            let response = "System: No API Keys detected. Please open Config.";
+            const gK = localStorage.getItem('master_groq');
+            const mK = localStorage.getItem('master_gemini');
+            let res = "No API Key. Please open Admin Settings.";
 
             try {
-                if (groqK) {
-                    response = await fetchGroq(input, groqK);
-                } else if (gemK) {
-                    response = await fetchGemini(input, gemK);
+                // UNIVERSAL LOGIC: Works with whichever key is provided
+                if (gK) {
+                    res = await fetchGroq(input, gK);
+                } else if (mK) {
+                    res = await fetchGemini(input, mK);
                 }
-            } catch (err) { response = "Network glitch. Please verify your API keys."; }
+            } catch (err) { res = "Connection Error. Check API status."; }
 
-            // AI-DRIVEN SWITCHING
-            const navMatch = response.match(/\[NAV:(\d+)\]/);
-            if (navMatch) driveNavigation(currentActiveSim, navMatch[1]);
-
-            addChat(response, 'nova');
-            speak(response);
+            addChat(res, 'nova');
+            speak(res);
         }
 
         async function fetchGroq(t, k) {
-            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST", headers: { "Authorization": `Bearer ${k}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{ role: "system", content: "You are Nova, an expert NCERT science tutor. Be brief. Use [NAV:2] to switch screens if needed." }, { role: "user", content: t }] })
+                body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{ role: "system", content: "You are Nova, an AI tutor. You follow NCERT academic standards for science. Be brief and professional." }, { role: "user", content: t }] })
             });
-            const d = await res.json(); return d.choices[0].message.content;
+            const d = await r.json(); return d.choices[0].message.content;
         }
 
         async function fetchGemini(t, k) {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`, {
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`, {
                 method: "POST", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `Explain science briefly based on NCERT: ${t}` }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: `NCERT Tutor: ${t}. Brief explanation only.` }] }] })
             });
-            const d = await res.json(); return d.candidates[0].content.parts[0].text;
+            const d = await r.json(); return d.candidates[0].content.parts[0].text;
         }
 
         function addChat(t, c) {
             const chat = document.getElementById('chat');
-            const d = document.createElement('div'); d.className = `bubble b-${c}`;
-            d.innerHTML = t.replace(/\[NAV:\d+\]/gi, '<i>(Visual Updated)</i>');
-            chat.appendChild(d); chat.scrollTop = chat.scrollHeight;
+            const div = document.createElement('div'); div.className = `bubble b-${c}`;
+            div.innerHTML = t; chat.appendChild(div); chat.scrollTop = chat.scrollHeight;
         }
 
         function speak(t) {
-            const u = new SpeechSynthesisUtterance(t.replace(/\[NAV:\d+\]/gi, ''));
+            const u = new SpeechSynthesisUtterance(t);
             u.rate = 1.1; window.speechSynthesis.speak(u);
         }
 
-        function toggleApi(s) { document.getElementById('apiModal').style.display = s ? 'flex' : 'none'; }
-        function saveKeys() {
+        function toggleModal(s) { document.getElementById('apiModal').style.display = s ? 'flex' : 'none'; }
+        function saveConfiguration() {
             localStorage.setItem('master_groq', document.getElementById('groqInput').value.trim());
             localStorage.setItem('master_gemini', document.getElementById('geminiInput').value.trim());
-            toggleApi(false);
-            addChat("Infrastructure Synchronized. Nova is now powered by the dual-engine gateway.", "nova");
+            toggleModal(false);
+            addChat("Engines Active. NCERT Grade Sync complete.", "nova");
         }
 
         window.onload = boot;
