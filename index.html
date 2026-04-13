@@ -3,134 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextGen Academy | AI Smartboard</title>
+    <title>NextGen Academy | Smartboard</title>
     <style>
         :root {
             --bg-dark: #0f111a;
             --panel-bg: #161925;
             --accent: #4facfe;
-            --accent-glow: #00f2fe;
             --text-main: #e6e6e6;
             --text-dim: #94a3b8;
-            --user-msg: #2d334a;
-            --nova-msg: rgba(79, 172, 254, 0.1);
         }
-
-        * { box-sizing: border-box; outline: none; }
-        body { 
-            margin: 0; padding: 0;
-            background: var(--bg-dark); 
-            color: var(--text-main); 
-            font-family: 'Inter', sans-serif;
-            display: flex; height: 100vh; overflow: hidden;
-        }
-
-        /* SIDEBAR */
-        .left-panel { 
-            width: 300px; background: var(--panel-bg); 
-            display: flex; flex-direction: column; 
-            border-right: 1px solid #2d334a;
-        }
-
-        .brand-area { padding: 25px; border-bottom: 1px solid #2d334a; }
-        .brand-area h2 { 
-            margin: 0; font-size: 1.4rem; 
-            background: linear-gradient(to right, var(--accent), var(--accent-glow));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-
-        .nav-content { flex: 1; overflow-y: auto; padding: 20px; }
-        .section-label { 
-            font-size: 0.75rem; text-transform: uppercase; color: var(--accent);
-            letter-spacing: 1.5px; margin: 25px 0 10px 5px; font-weight: 700;
-        }
-
-        .t-btn {
-            width: 100%; padding: 12px; margin-bottom: 8px;
-            background: transparent; border: 1px solid #2d334a;
-            color: var(--text-main); border-radius: 10px; cursor: pointer;
-            text-align: left; display: flex; align-items: center; gap: 12px;
-            transition: 0.2s;
-        }
-
-        .t-btn:hover { background: #1e2235; border-color: var(--accent); }
-        .t-btn.active { background: var(--accent); color: #000; font-weight: bold; border-color: transparent; }
-
-        /* MAIN AREA */
-        .main-board { flex: 1; display: flex; flex-direction: column; }
-        .board-header { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); }
+        body { margin: 0; background: var(--bg-dark); color: var(--text-main); font-family: sans-serif; display: flex; height: 100vh; overflow: hidden; }
         
-        .visual-container { 
-            flex: 1; margin: 20px; background: #000; 
-            border-radius: 15px; overflow: hidden; border: 1px solid #2d334a;
+        /* SIDEBAR */
+        .left-panel { width: 320px; background: var(--panel-bg); display: flex; flex-direction: column; border-right: 1px solid #2d334a; }
+        .brand { padding: 20px; font-size: 1.5rem; font-weight: bold; background: #000; color: var(--accent); text-align: center; }
+        .nav-content { flex: 1; overflow-y: auto; padding: 15px; }
+        .section-label { font-size: 0.7rem; text-transform: uppercase; color: var(--accent); margin: 20px 0 10px; font-weight: bold; }
+        
+        .t-btn {
+            width: 100%; padding: 10px; margin-bottom: 5px; background: transparent; 
+            border: 1px solid #2d334a; color: white; border-radius: 8px; cursor: pointer;
+            text-align: left; transition: 0.2s; font-size: 0.85rem;
         }
-        iframe { width: 100%; height: 100%; border: none; }
+        .t-btn:hover { background: #1e2235; border-color: var(--accent); }
+        .t-btn.active { background: var(--accent); color: black; font-weight: bold; }
 
-        /* CHAT PANEL */
-        .right-panel { width: 350px; background: var(--panel-bg); border-left: 1px solid #2d334a; display: flex; flex-direction: column; }
-        .chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 85%; padding: 12px; border-radius: 15px; font-size: 0.9rem; }
-        .nova-msg { background: var(--nova-msg); border-left: 3px solid var(--accent); align-self: flex-start; }
-        .input-box { padding: 15px; border-top: 1px solid #2d334a; }
-        .input-wrapper { display: flex; background: #0f172a; padding: 5px; border-radius: 10px; }
-        .input-wrapper input { flex: 1; background: transparent; border: none; color: white; padding: 10px; }
+        /* MAIN */
+        .main-board { flex: 1; display: flex; flex-direction: column; }
+        .header { padding: 15px; background: rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; }
+        .visual-container { flex: 1; margin: 15px; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid #2d334a; }
+        iframe { width: 100%; height: 100%; border: none; background: white; }
     </style>
 </head>
 <body>
 
     <div class="left-panel">
-        <div class="brand-area"><h2>NEXTGEN ACADEMY</h2></div>
+        <div class="brand">NEXTGEN ACADEMY</div>
         <div class="nav-content">
-            <div class="section-label">Physical Science</div>
-            <button class="t-btn active" onclick="switchBoard('atom_basic', 'Build an Atom', this)">⚛️ Build an Atom</button>
-            <button class="t-btn" onclick="switchBoard('wave', 'Wave Lab', this)">🌊 Waves on a String</button>
-            <button class="t-btn" onclick="switchBoard('circuit', 'Circuits', this)">🔋 Circuit Lab</button>
-
-            <div class="section-label">Biology Labs</div>
-            <button class="t-btn" onclick="switchBoard('natural_selection', 'Natural Selection', this)">🧬 Natural Selection</button>
-            <button class="t-btn" onclick="switchBoard('gene_expression', 'Gene Expression', this)">🧪 Gene Expression</button>
-            <button class="t-btn" onclick="switchBoard('neuron', 'The Neuron', this)">🧠 Neuron Simulation</button>
+            
+            <div class="section-label">Chemistry & Matter</div>
+            <button class="t-btn active" onclick="switchB('atom', 'Build an Atom', this)">⚛️ Build an Atom</button>
+            <button class="t-btn" onclick="switchB('ph', 'pH Scale', this)">🧪 pH Scale</button>
+            <button class="t-btn" onclick="switchB('acid', 'Acid-Base Solutions', this)">⚗️ Acid-Base</button>
+            <button class="t-btn" onclick="switchB('molarity', 'Molarity', this)">💧 Molarity</button>
+            <button class="t-btn" onclick="switchB('beers', 'Beers Law Lab', this)">🔦 Beers Law</button>
+            
+            <div class="section-label">Physics & Motion</div>
+            <button class="t-btn" onclick="switchB('forces', 'Forces & Motion', this)">🏎️ Forces & Motion</button>
+            <button class="t-btn" onclick="switchB('gravity', 'Gravity Force Lab', this)">🪐 Gravity Lab</button>
+            <button class="t-btn" onclick="switchB('energy', 'Energy Skate Park', this)">🛹 Energy Skate Park</button>
+            <button class="t-btn" onclick="switchB('wave', 'Wave on a String', this)">🌊 Wave on a String</button>
+            <button class="t-btn" onclick="switchB('pressure', 'Under Pressure', this)">🎈 Under Pressure</button>
+            
+            <div class="section-label">Electricity & Math</div>
+            <button class="t-btn" onclick="switchB('ohms', 'Ohms Law', this)">⚡ Ohms Law</button>
+            <button class="t-btn" onclick="switchB('resistance', 'Resistance in a Wire', this)">🧵 Resistance</button>
+            <button class="t-btn" onclick="switchB('faraday', 'Faradays Law', this)">🧲 Faradays Law</button>
+            <button class="t-btn" onclick="switchB('area', 'Area Builder', this)">📐 Area Builder</button>
+            <button class="t-btn" onclick="switchB('fractions', 'Fraction Matcher', this)">🍰 Fraction Matcher</button>
         </div>
     </div>
 
     <div class="main-board">
-        <div class="board-header">
-            <h1 id="active-title" style="margin:0; font-size:1.2rem;">Build an Atom</h1>
-            <div style="font-size:0.8rem; color:var(--text-dim);">Smartboard: Active</div>
+        <div class="header">
+            <h2 id="active-title" style="margin:0; font-size:1.1rem;">Build an Atom</h2>
+            <span style="color:var(--accent); font-size:0.8rem;">● System Live</span>
         </div>
         <div class="visual-container">
-            <iframe id="smart-frame" src="./html/build-an-atom/latest/build-an-atom_en.html?screens=1"></iframe>
-        </div>
-    </div>
-
-    <div class="right-panel">
-        <div class="chat-container" id="chat-box">
-            <div class="msg nova-msg">Hello! I've added the Biology labs. Which one should we start with?</div>
-        </div>
-        <div class="input-box">
-            <div class="input-wrapper">
-                <input type="text" placeholder="Ask Nova..." onkeypress="if(event.key==='Enter') alert('Nova is ready!')">
-            </div>
+            <iframe id="smart-frame" src="./html/build-an-atom/latest/build-an-atom_en.html"></iframe>
         </div>
     </div>
 
     <script>
-        // THE UPDATED DATABASE
-        const ACADEMY_DB = {
-            atom_basic: './html/build-an-atom/latest/build-an-atom_en.html?screens=1',
+        // Data based EXACTLY on your photos
+        const DB = {
+            atom: './html/build-an-atom/latest/build-an-atom_en.html',
+            ph: './html/ph-scale/latest/ph-scale_en.html',
+            acid: './html/acid-base-solutions/latest/acid-base-solutions_en.html',
+            molarity: './html/molarity/latest/molarity_en.html',
+            beers: './html/beers-law-lab/latest/beers-law-lab_en.html',
+            forces: './html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html',
+            gravity: './html/gravity-force-lab/latest/gravity-force-lab_en.html',
+            energy: './html/energy-skate-park-basics/latest/energy-skate-park-basics_en.html',
             wave: './html/wave-on-a-string/latest/wave-on-a-string_en.html',
-            circuit: './html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_en.html',
-
-            // NEW BIOLOGY PATHS (Based on standard PhET folder names)
-            natural_selection: './html/natural-selection/latest/natural-selection_en.html',
-            gene_expression: './html/gene-expression-basics/latest/gene-expression-basics_en.html',
-            neuron: './html/neuron/latest/neuron_en.html'
+            pressure: './html/under-pressure/latest/under-pressure_en.html',
+            ohms: './html/ohms-law/latest/ohms-law_en.html',
+            resistance: './html/resistance-in-a-wire/latest/resistance-in-a-wire_en.html',
+            faraday: './html/faradays-law/latest/faradays-law_en.html',
+            area: './html/area-builder/latest/area-builder_en.html',
+            fractions: './html/fraction-matcher/latest/fraction-matcher_en.html'
         };
 
-        function switchBoard(key, title, btn) {
+        function switchB(key, title, btn) {
             document.getElementById('active-title').textContent = title;
-            document.getElementById('smart-frame').src = ACADEMY_DB[key];
-            
+            document.getElementById('smart-frame').src = DB[key];
             document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
         }
