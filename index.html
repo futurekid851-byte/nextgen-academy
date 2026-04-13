@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextGen Academy | AI-Powered Interactive Smartboard</title>
-    <link rel="icon" href="data:,">
+    <title>NextGen Academy | AI-Powered Smartboard</title>
     <style>
         /* ================================================================
         PREMIUM SMARTBOARD UI STYLING
@@ -33,7 +32,7 @@
 
         /* NAVIGATION PANEL */
         .left-panel { 
-            width: 280px; background: var(--panel-bg); 
+            width: 300px; background: var(--panel-bg); 
             display: flex; flex-direction: column; 
             border-right: 1px solid #2d334a; z-index: 10;
         }
@@ -48,85 +47,52 @@
 
         .nav-content { flex: 1; overflow-y: auto; padding: 20px; }
         .section-label { 
-            font-size: 0.75rem; text-transform: uppercase; color: var(--text-dim);
-            letter-spacing: 1.5px; margin: 20px 0 10px 5px; font-weight: 700;
+            font-size: 0.75rem; text-transform: uppercase; color: var(--accent);
+            letter-spacing: 1.5px; margin: 25px 0 10px 5px; font-weight: 700;
         }
-
-        /* DUAL KEY SETUP CARD */
-        .setup-card { 
-            background: #1e2235; padding: 15px; border-radius: 12px; 
-            margin-bottom: 20px; border: 1px solid #2d334a;
-        }
-
-        .setup-card label {
-            display: block; font-size: 0.7rem; color: var(--accent);
-            margin-bottom: 4px; font-weight: bold; text-transform: uppercase;
-        }
-
-        .setup-card select, .setup-card input {
-            width: 100%; padding: 10px; margin-bottom: 12px; 
-            border-radius: 8px; border: 1px solid #334155;
-            background: #0f172a; color: white; font-size: 0.85rem;
-        }
-
-        .primary-btn {
-            width: 100%; padding: 12px; border: none; border-radius: 8px;
-            background: var(--accent); color: white; font-weight: 600;
-            cursor: pointer; transition: 0.3s;
-        }
-
-        .primary-btn:hover { background: var(--accent-glow); box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4); }
 
         /* TOPIC BUTTONS */
         .t-btn {
-            width: 100%; padding: 14px; margin-bottom: 10px;
+            width: 100%; padding: 12px 14px; margin-bottom: 8px;
             background: transparent; border: 1px solid #2d334a;
             color: var(--text-main); border-radius: 10px; cursor: pointer;
             text-align: left; display: flex; align-items: center; gap: 12px;
-            transition: 0.2s;
+            transition: 0.2s; font-size: 0.9rem;
         }
 
         .t-btn:hover { background: #1e2235; border-color: var(--accent); transform: translateX(5px); }
         .t-btn.active {
             background: linear-gradient(135deg, var(--accent) 0%, var(--accent-glow) 100%);
-            border-color: transparent; font-weight: 700;
+            border-color: transparent; font-weight: 700; color: #000;
         }
 
         /* MAIN SMARTBOARD */
         .main-board { flex: 1; display: flex; flex-direction: column; background: var(--bg-dark); }
-        .board-header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+        .board-header { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); }
         
         .back-btn {
             background: #2d334a; color: white; border: 1px solid #444; 
             padding: 8px 16px; border-radius: 8px; cursor: pointer; 
             font-weight: bold; display: flex; align-items: center; gap: 8px;
-            transition: 0.2s;
         }
-        .back-btn:hover { background: var(--accent); border-color: var(--accent); }
 
         .visual-container { 
-            flex: 1; margin: 0 40px 40px 40px; background: #000; 
-            border-radius: 20px; overflow: hidden; border: 2px solid #1e2235;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            flex: 1; margin: 20px; background: #000; 
+            border-radius: 15px; overflow: hidden; border: 1px solid #2d334a;
         }
         iframe { width: 100%; height: 100%; border: none; background: white; }
 
         /* RIGHT TUTOR PANEL */
-        .right-panel { width: 360px; background: var(--panel-bg); border-left: 1px solid #2d334a; display: flex; flex-direction: column; }
+        .right-panel { width: 350px; background: var(--panel-bg); border-left: 1px solid #2d334a; display: flex; flex-direction: column; }
         .chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 85%; padding: 12px 16px; border-radius: 15px; font-size: 0.95rem; line-height: 1.4; animation: slideIn 0.3s ease; }
-        .user-msg { background: var(--user-msg); align-self: flex-end; border-bottom-right-radius: 2px; }
-        .nova-msg { background: var(--nova-msg); border-left: 4px solid var(--accent); align-self: flex-start; border-bottom-left-radius: 2px;}
+        .msg { max-width: 85%; padding: 12px 16px; border-radius: 15px; font-size: 0.9rem; line-height: 1.4; }
+        .user-msg { background: var(--user-msg); align-self: flex-end; }
+        .nova-msg { background: var(--nova-msg); border-left: 3px solid var(--accent); align-self: flex-start; }
         
-        .thinking { display: none; font-size: 0.8rem; color: var(--accent); margin-top: 5px; font-style: italic; }
-
-        .input-box { padding: 20px; background: rgba(0,0,0,0.2); border-top: 1px solid #2d334a; }
-        .input-wrapper { display: flex; gap: 10px; background: #0f172a; padding: 8px; border-radius: 12px; border: 1px solid #334155; }
+        .input-box { padding: 15px; background: rgba(0,0,0,0.2); border-top: 1px solid #2d334a; }
+        .input-wrapper { display: flex; gap: 8px; background: #0f172a; padding: 5px; border-radius: 10px; border: 1px solid #334155; }
         .input-wrapper input { flex: 1; background: transparent; border: none; color: white; padding-left: 10px; }
-        .mic-btn { background: rgba(255, 75, 43, 0.1); border: none; color: var(--danger); padding: 10px; border-radius: 8px; cursor: pointer; }
-        .send-btn { background: var(--accent); border: none; color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold;}
-
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .send-btn { background: var(--accent); border: none; color: white; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: bold;}
     </style>
 </head>
 <body>
@@ -135,42 +101,30 @@
         <div class="brand-area"><h2>NEXTGEN ACADEMY</h2></div>
         
         <div class="nav-content">
-            <div class="section-label">Engine Config</div>
-            <div class="setup-card">
-                <label>Active Brain</label>
-                <select id="engine-choice">
-                    <option value="groq">Groq Engine (Fast)</option>
-                    <option value="gemini">Gemini Engine (Smart)</option>
-                </select>
-                
-                <label>Groq API Key</label>
-                <input type="password" id="groq-key-input" placeholder="Paste Groq Key">
-                
-                <label>Gemini API Key</label>
-                <input type="password" id="gemini-key-input" placeholder="Paste Gemini Key">
-                
-                <button class="primary-btn" onclick="saveConfig()">Save All Settings</button>
-            </div>
+            <div class="section-label">Physics & Chemistry</div>
+            <button class="t-btn active" onclick="switchBoard('atom_basic', 'Build an Atom', this)">⚛️ Atomic Structure</button>
+            <button class="t-btn" onclick="switchBoard('atom_symbol', 'Atomic Symbols', this)">📄 Atomic Symbols</button>
+            <button class="t-btn" onclick="switchBoard('atom_game', 'Atom Challenge', this)">🎮 Atom Game</button>
+            <button class="t-btn" onclick="switchBoard('force_friction', 'Friction Lab', this)">🔥 Friction & Motion</button>
+            <button class="t-btn" onclick="switchBoard('gravity', 'Gravity Orbit', this)">🪐 Gravity & Orbits</button>
+            <button class="t-btn" onclick="switchBoard('wave', 'Wave Lab', this)">🌊 Waves on a String</button>
+            <button class="t-btn" onclick="switchBoard('circuit_lab', 'Circuit Sandbox', this)">🔋 DC Circuit Lab</button>
 
-            <div class="section-label">Laboratory Topics</div>
-            <button class="t-btn active" onclick="switchBoard('atom_basic', 'Atomic Structure', this)"><i>⚛️</i> Build an Atom</button>
-            <button class="t-btn" onclick="switchBoard('wave', 'Wave Mechanics', this)"><i>🌊</i> Wave on a String</button>
-            <button class="t-btn" onclick="switchBoard('force_net', 'Newtonian Forces', this)"><i>📦</i> Forces & Motion</button>
-            <button class="t-btn" onclick="switchBoard('gravity', 'Gravity Lab', this)"><i>🪐</i> Gravity Lab</button>
-            <button class="t-btn" onclick="switchBoard('circuit_intro', 'DC Circuits', this)"><i>🔋</i> Circuit Design</button>
+            <div class="section-label">Biology & Life Science</div>
+            <button class="t-btn" onclick="switchBoard('natural_selection', 'Natural Selection', this)">🧬 Natural Selection</button>
+            <button class="t-btn" onclick="switchBoard('gene_expression', 'Gene Expression', this)">🧪 Gene Expression</button>
+            <button class="t-btn" onclick="switchBoard('neuron', 'The Neuron', this)">🧠 Neuron Simulation</button>
+            <button class="t-btn" onclick="switchBoard('color_vision', 'Color Vision', this)">👁️ Color Vision</button>
         </div>
     </div>
 
     <div class="main-board">
         <div class="board-header">
-            <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
                 <button class="back-btn" onclick="goBack()">⬅️ Back</button>
-                <h1 id="active-title" style="margin:0; font-weight:300;">Atomic Structure</h1>
+                <h1 id="active-title" style="margin:0; font-size:1.2rem;">Atomic Structure</h1>
             </div>
-            <div class="status-badge" style="display:flex; align-items:center; gap:8px; color:var(--text-dim); font-size:0.85rem;">
-                <div style="width:8px; height:8px; background:#10b981; border-radius:50%; box-shadow:0 0 10px #10b981;"></div> 
-                <span id="sys-status">Smartboard: Online</span>
-            </div>
+            <div id="sys-status" style="font-size:0.8rem; color:var(--text-dim);">Smartboard: Online</div>
         </div>
         <div class="visual-container">
             <iframe id="smart-frame" src="./html/build-an-atom/latest/build-an-atom_en.html?screens=1" allowfullscreen></iframe>
@@ -178,16 +132,14 @@
     </div>
 
     <div class="right-panel">
-        <div class="tutor-header" style="padding:25px; border-bottom:1px solid #2d334a;">
-            <h2 style="color:white; margin:0; font-size:1.1rem;">NOVA AI TUTOR</h2>
-            <div id="thinking-ui" class="thinking">Nova is analyzing request...</div>
+        <div class="tutor-header" style="padding:20px; border-bottom:1px solid #2d334a;">
+            <h2 style="color:white; margin:0; font-size:1rem;">NOVA AI TUTOR</h2>
         </div>
         <div class="chat-container" id="chat-box">
-            <div class="msg nova-msg">Hello! I am Nova. My neural links to all sections are active. Ask me to open "Friction", "Circuit Labs", or "Atomic Symbols" and watch me skip the menus!</div>
+            <div class="msg nova-msg">Welcome to NextGen Academy. I have linked all simulations. Which lab should we explore first?</div>
         </div>
         <div class="input-box">
             <div class="input-wrapper">
-                <button class="mic-btn" onclick="triggerVoice()" title="Use Microphone">🎙️</button>
                 <input type="text" id="user-query" placeholder="Ask Nova..." onkeypress="if(event.key==='Enter') processQuery()">
                 <button class="send-btn" onclick="processQuery()">SEND</button>
             </div>
@@ -195,195 +147,71 @@
     </div>
 
     <script>
-        let config = { engine: 'groq', groqKey: '', geminiKey: '', history: [] };
-        let boardHistory = []; 
+        let boardHistory = [];
 
-        // ═════ THE COMPLETE RELATIVE PATH DATABASE (Server-Ready) ═════
+        // ═════ THE COMPLETE SIMULATION DATABASE ═════
+        // Note: Make sure the folder names match exactly what is in your 'html' folder!
         const ACADEMY_DB = {
-            middle_school: {
-                // ATOMS (3 Screens)
-                atom_basic: './html/build-an-atom/latest/build-an-atom_en.html?screens=1',
-                atom_symbol: './html/build-an-atom/latest/build-an-atom_en.html?screens=2',
-                atom_game: './html/build-an-atom/latest/build-an-atom_en.html?screens=3',
-                
-                // FORCES & MOTION (4 Screens)
-                force_net: './html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html?screens=1',
-                force_motion: './html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html?screens=2',
-                force_friction: './html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html?screens=3',
-                force_acceleration: './html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html?screens=4',
+            // PHYSICS & CHEMISTRY
+            atom_basic: './html/build-an-atom/latest/build-an-atom_en.html?screens=1',
+            atom_symbol: './html/build-an-atom/latest/build-an-atom_en.html?screens=2',
+            atom_game: './html/build-an-atom/latest/build-an-atom_en.html?screens=3',
+            force_friction: './html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html?screens=3',
+            gravity: './html/gravity-force-lab/latest/gravity-force-lab_en.html',
+            wave: './html/wave-on-a-string/latest/wave-on-a-string_en.html',
+            circuit_lab: './html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_en.html?screens=2',
 
-                // CIRCUITS (2 Screens)
-                circuit_intro: './html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_en.html?screens=1',
-                circuit_lab: './html/circuit-construction-kit-dc/latest/circuit-construction-kit-dc_en.html?screens=2',
-
-                // SINGLE SCREEN LABS
-                wave: './html/wave-on-a-string/latest/wave-on-a-string_en.html',
-                gravity: './html/gravity-force-lab/latest/gravity-force-lab_en.html'
-            }
+            // BIOLOGY (Ensure these folders exist in your /html/ directory)
+            natural_selection: './html/natural-selection/latest/natural-selection_en.html',
+            gene_expression: './html/gene-expression-basics/latest/gene-expression-basics_en.html',
+            neuron: './html/neuron/latest/neuron_en.html',
+            color_vision: './html/color-vision/latest/color-vision_en.html'
         };
 
-        // ═════ NOVA'S UPGRADED DEEP-LINKING PROMPT ═════
-        const NOVA_SYSTEM_PROMPT = `You are Nova, an AI science teacher at NextGen Academy.
-        COMMAND RULES:
-        1. Always reply in JSON format only. Do not use markdown tags like \`\`\`json.
-        2. Format MUST be exactly: {"topic_key": "atom_basic", "speech": "Your short text here"}
-        3. Available keys for Deep Linking: 
-           - ATOM: atom_basic (structure), atom_symbol (notation), atom_game
-           - FORCES: force_net, force_motion, force_friction, force_acceleration
-           - CIRCUITS: circuit_intro (basics), circuit_lab (advanced sandbox)
-           - OTHERS: wave, gravity.
-        Listen closely to the user! If they ask about friction, use "force_friction". If they want a circuit lab, use "circuit_lab". Keep your speech under 3 sentences and encourage exploration.`;
-
-        // --- System Functions ---
-        function saveConfig() {
-            config.engine = document.getElementById('engine-choice').value;
-            config.groqKey = document.getElementById('groq-key-input').value.trim();
-            config.geminiKey = document.getElementById('gemini-key-input').value.trim();
-            alert('Settings Saved! Nova is synchronized with both engines.');
-        }
-
-        // --- UI & History Functions ---
         function switchBoard(key, title, btn) {
-            const currentFrame = document.getElementById('smart-frame').src;
+            const frame = document.getElementById('smart-frame');
+            const currentUrl = frame.src;
             const currentTitle = document.getElementById('active-title').textContent;
-            
-            // Save to history if we are moving to a NEW page
-            if (currentFrame && !currentFrame.endsWith(ACADEMY_DB.middle_school[key].replace('./', ''))) {
-                boardHistory.push({ url: currentFrame, title: currentTitle });
+
+            if (currentUrl && !currentUrl.includes(ACADEMY_DB[key].replace('./', ''))) {
+                boardHistory.push({ url: currentUrl, title: currentTitle });
             }
 
-            // Update UI Sidebar highlighting
             if (btn) {
                 document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-            } else {
-                let baseKey = key.split('_')[0]; 
-                document.querySelectorAll('.t-btn').forEach(b => {
-                    b.classList.remove('active');
-                    if(b.getAttribute('onclick').includes(baseKey)) b.classList.add('active');
-                });
             }
-            
-            // Execute the Switch
+
             document.getElementById('active-title').textContent = title;
-            document.getElementById('smart-frame').src = ACADEMY_DB.middle_school[key];
-            
-            // Fancy status update
-            document.getElementById('sys-status').textContent = "Loading " + title + "...";
-            setTimeout(() => { document.getElementById('sys-status').textContent = "Smartboard: Online"; }, 800);
+            frame.src = ACADEMY_DB[key];
         }
 
         function goBack() {
             if(boardHistory.length > 0) {
-                const previousPage = boardHistory.pop(); 
-                document.getElementById('smart-frame').src = previousPage.url;
-                document.getElementById('active-title').textContent = previousPage.title;
-                
-                document.getElementById('sys-status').textContent = "Restoring Previous State...";
-                setTimeout(() => { document.getElementById('sys-status').textContent = "Smartboard: Online"; }, 800);
-            } else {
-                alert("You are currently on your first screen! Nothing to go back to.");
+                const prev = boardHistory.pop();
+                document.getElementById('smart-frame').src = prev.url;
+                document.getElementById('active-title').textContent = prev.title;
             }
         }
 
-        function addMessage(text, role) {
-            const box = document.getElementById('chat-box');
-            box.insertAdjacentHTML('beforeend', `<div class="msg ${role}-msg">${text.replace(/\n/g, '<br>')}</div>`);
-            box.scrollTop = box.scrollHeight;
-        }
-
-        function speak(text) {
-            window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'en-IN';
-            window.speechSynthesis.speak(utter);
-        }
-
-        function triggerVoice() {
-            if (!('webkitSpeechRecognition' in window)) return alert("Voice recognition not supported in this browser.");
-            const recognition = new webkitSpeechRecognition();
-            recognition.lang = 'en-IN';
-            document.getElementById('sys-status').textContent = "Nova is listening...";
-            
-            recognition.onresult = (e) => {
-                document.getElementById('sys-status').textContent = "Smartboard: Online";
-                document.getElementById('user-query').value = e.results[0][0].transcript;
-                processQuery();
-            };
-            recognition.start();
-        }
-
-        // --- AI API Logic ---
+        // Nova Logic (Simplified for clarity)
         async function processQuery() {
             const input = document.getElementById('user-query');
-            const query = input.value.trim();
-            
-            let activeKey = config.engine === 'groq' ? config.groqKey : config.geminiKey;
+            const query = input.value.trim().toLowerCase();
             if(!query) return;
-            if(!activeKey) return alert(`Please enter your ${config.engine.toUpperCase()} API Key on the left and click Save.`);
 
-            addMessage(query, 'user');
+            const box = document.getElementById('chat-box');
+            box.insertAdjacentHTML('beforeend', `<div class="msg user-msg">${query}</div>`);
             input.value = '';
-            document.getElementById('thinking-ui').style.display = 'block';
 
-            try {
-                let responseText = "";
+            // Simple Auto-Switch based on keywords
+            if (query.includes("friction")) switchBoard('force_friction', 'Friction Lab');
+            if (query.includes("game")) switchBoard('atom_game', 'Atom Game');
+            if (query.includes("gene")) switchBoard('gene_expression', 'Gene Expression');
+            if (query.includes("neuron")) switchBoard('neuron', 'The Neuron');
 
-                if(config.engine === 'groq') {
-                    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${activeKey}` },
-                        body: JSON.stringify({
-                            model: "llama-3.1-8b-instant",
-                            messages: [
-                                {role: "system", content: NOVA_SYSTEM_PROMPT},
-                                ...config.history.map(m => ({ role: m.role, content: m.content })),
-                                {role: "user", content: query}
-                            ],
-                            temperature: 0.5
-                        })
-                    });
-                    const data = await res.json();
-                    if(data.error) throw new Error(data.error.message);
-                    responseText = data.choices[0].message.content;
-                } else {
-                    const formattedHistory = config.history.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{text: m.content}] }));
-                    formattedHistory.push({ role: 'user', parts: [{text: query}] });
-
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${activeKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            system_instruction: { parts: [{text: NOVA_SYSTEM_PROMPT}] },
-                            contents: formattedHistory,
-                            generationConfig: { temperature: 0.5 }
-                        })
-                    });
-                    const data = await res.json();
-                    if(data.error) throw new Error(data.error.message);
-                    responseText = data.candidates[0].content.parts[0].text;
-                }
-
-                const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
-                const aiData = JSON.parse(cleanJson);
-
-                if(aiData.topic_key && ACADEMY_DB.middle_school[aiData.topic_key]) {
-                    let readableTitle = aiData.topic_key.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-                    switchBoard(aiData.topic_key, readableTitle, null);
-                }
-
-                document.getElementById('thinking-ui').style.display = 'none';
-                addMessage(aiData.speech, 'nova');
-                speak(aiData.speech);
-
-                config.history.push({role: "user", content: query});
-                config.history.push({role: "assistant", content: responseText});
-
-            } catch (err) {
-                console.error(err);
-                document.getElementById('thinking-ui').style.display = 'none';
-                addMessage(`⚠️ Connection Error: Please verify your ${config.engine.toUpperCase()} API Key.`, 'nova');
-            }
+            box.insertAdjacentHTML('beforeend', `<div class="msg nova-msg">I've adjusted the Smartboard for you. Let's analyze the data!</div>`);
+            box.scrollTop = box.scrollHeight;
         }
     </script>
 </body>
