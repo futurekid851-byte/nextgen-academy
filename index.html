@@ -3,682 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextGen Academy | AI-Powered Smartboard</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-
+    <title>NextGen Academy | Dual-Engine AI Smartboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
-        /* ================================================================
-        1.0 GLOBAL THEME VARIABLES (GLASSMORPHISM)
-        ================================================================
-        */
         :root {
             --primary: #4facfe;
-            --primary-glow: rgba(79, 172, 254, 0.5);
             --secondary: #00f2fe;
-            --bg-dark: #080a0f;
-            --panel-bg: rgba(22, 25, 37, 0.8);
-            --panel-border: rgba(255, 255, 255, 0.08);
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
-            --accent-success: #10b981;
-            --accent-warning: #f59e0b;
-            --accent-danger: #ef4444;
-            --glass: blur(12px);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg: #030508;
+            --panel: rgba(10, 14, 20, 0.95);
+            --border: rgba(255, 255, 255, 0.08);
+            --mic-ready: #10b981;
+            --mic-active: #ef4444;
         }
 
-        /* ================================================================
-        2.0 CORE LAYOUT
-        ================================================================
-        */
-        * {
-            box-sizing: border-box;
-            outline: none;
-        }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; height: 100vh; overflow: hidden; }
+        
+        /* 1. ULTRA-THIN EDGE LAYOUT */
+        .app-shell { display: flex; width: 100vw; height: 100vh; }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background: var(--bg-dark);
-            background-image: radial-gradient(circle at 50% 50%, #1a1f35 0%, #080a0f 100%);
-            color: var(--text-main);
-            font-family: 'Outfit', sans-serif;
-            display: flex;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-        }
+        .sidebar-left { width: 210px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+        .sidebar-right { width: 260px; background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+        .main-stage { flex: 1; display: flex; flex-direction: column; background: #000; position: relative; }
 
-        /* ================================================================
-        3.0 SIDEBAR (NAVIGATION)
-        ================================================================
-        */
-        .sidebar {
-            width: 320px;
-            background: var(--panel-bg);
-            backdrop-filter: var(--glass);
-            border-right: 1px solid var(--panel-border);
-            display: flex;
-            flex-direction: column;
-            z-index: 100;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-        }
+        /* HEADER */
+        .top-nav { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: rgba(0,0,0,0.4); }
+        .brand { font-weight: 800; font-size: 1rem; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .brand-container {
-            padding: 30px 25px;
-            text-align: center;
-            border-bottom: 1px solid var(--panel-border);
-        }
+        /* BOARD AREA */
+        .iframe-container { flex: 1; position: relative; margin: 10px; border-radius: 15px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        iframe { width: 100%; height: 100%; border: none; background: #fff; }
 
-        .brand-container h1 {
-            margin: 0;
-            font-size: 1.6rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-        }
+        /* API SETTINGS MODAL */
+        #api-settings { position: absolute; top: 70px; right: 20px; background: #161b22; padding: 20px; border-radius: 12px; border: 1px solid var(--primary); z-index: 1000; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        input[type="password"] { width: 100%; background: #0d1117; border: 1px solid #30363d; color: white; padding: 8px; border-radius: 5px; margin: 10px 0; font-size: 0.8rem; }
+        
+        /* MIC BUTTON ENGINE */
+        .voice-hub { padding: 20px; display: flex; flex-direction: column; align-items: center; border-top: 1px solid var(--border); }
+        .mic-btn { width: 55px; height: 55px; border-radius: 50%; border: none; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; background: var(--mic-ready); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+        .mic-btn.recording { background: var(--mic-active); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
-        .brand-container p {
-            margin: 5px 0 0;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+        /* NAV ELEMENTS */
+        .nav-item { width: 100%; padding: 10px 15px; background: transparent; border: none; color: #94a3b8; text-align: left; cursor: pointer; font-size: 0.8rem; border-radius: 5px; transition: 0.2s; }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .nav-item.active { background: var(--primary); color: #000; font-weight: bold; }
 
-        /* SEARCH AREA */
-        .search-area {
-            padding: 15px 20px;
-        }
-
-        .search-bar {
-            width: 100%;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--panel-border);
-            border-radius: 12px;
-            padding: 12px 15px;
-            color: white;
-            font-family: inherit;
-            transition: var(--transition);
-        }
-
-        .search-bar:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow);
-        }
-
-        /* NAVIGATION LIST */
-        .nav-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px 15px 30px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary) transparent;
-        }
-
-        .nav-list::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .nav-list::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-
-        .category-label {
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin: 25px 0 12px 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .category-label::after {
-            content: '';
-            height: 1px;
-            flex: 1;
-            background: linear-gradient(to right, rgba(79, 172, 254, 0.3), transparent);
-        }
-
-        .sim-btn {
-            width: 100%;
-            padding: 14px 16px;
-            margin-bottom: 8px;
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--text-dim);
-            border-radius: 12px;
-            cursor: pointer;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: var(--transition);
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        .sim-btn i {
-            font-size: 1.1rem;
-            opacity: 0.7;
-        }
-
-        .sim-btn:hover {
-            background: rgba(255,255,255,0.03);
-            color: white;
-            transform: translateX(5px);
-            border-color: var(--panel-border);
-        }
-
-        .sim-btn.active {
-            background: linear-gradient(135deg, var(--primary) 0%, #0072ff 100%);
-            color: #000;
-            font-weight: 700;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            border-color: transparent;
-        }
-
-        /* ================================================================
-        4.0 MAIN DASHBOARD (CONTENT)
-        ================================================================
-        */
-        .main-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .top-header {
-            height: 80px;
-            background: rgba(0,0,0,0.2);
-            backdrop-filter: var(--glass);
-            border-bottom: 1px solid var(--panel-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 40px;
-        }
-
-        .status-badge {
-            padding: 6px 14px;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid var(--accent-success);
-            color: var(--accent-success);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--accent-success);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-success);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
-        }
-
-        .active-sim-info h2 {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: white;
-        }
-
-        /* THE SMARTBOARD VISUALIZER */
-        .visualizer-area {
-            flex: 1;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .iframe-wrapper {
-            flex: 1;
-            background: #000;
-            border-radius: 24px;
-            overflow: hidden;
-            border: 2px solid var(--panel-border);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-            position: relative;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: white;
-        }
-
-        /* LOADING OVERLAY */
-        #loader {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-dark);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            transition: opacity 0.5s;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ================================================================
-        5.0 NOVA AI TUTOR (RIGHT PANEL)
-        ================================================================
-        */
-        .tutor-panel {
-            width: 380px;
-            background: var(--panel-bg);
-            backdrop-filter: var(--glass);
-            border-left: 1px solid var(--panel-border);
-            display: flex;
-            flex-direction: column;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
-        }
-
-        .tutor-header {
-            padding: 25px;
-            background: rgba(0,0,0,0.3);
-            border-bottom: 1px solid var(--panel-border);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .nova-avatar {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            color: black;
-            font-size: 1.2rem;
-            box-shadow: 0 0 20px var(--primary-glow);
-        }
-
-        .chat-display {
-            flex: 1;
-            overflow-y: auto;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            scrollbar-width: none;
-        }
-
-        .chat-display::-webkit-scrollbar { display: none; }
-
-        .message {
-            max-width: 85%;
-            padding: 14px 18px;
-            border-radius: 18px;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            position: relative;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .msg-nova {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .msg-user {
-            background: var(--primary);
-            color: #000;
-            font-weight: 600;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-
-        .chat-input-area {
-            padding: 25px;
-            background: rgba(0,0,0,0.3);
-            border-top: 1px solid var(--panel-border);
-        }
-
-        .input-box {
-            display: flex;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--panel-border);
-            border-radius: 15px;
-            padding: 8px;
-            transition: var(--transition);
-        }
-
-        .input-box:focus-within {
-            border-color: var(--primary);
-            background: rgba(255,255,255,0.08);
-        }
-
-        .input-box input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            font-family: inherit;
-        }
-
-        .send-btn {
-            background: var(--primary);
-            border: none;
-            color: black;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .send-btn:hover {
-            transform: scale(1.05);
-            background: var(--secondary);
-        }
-
-        /* ================================================================
-        6.0 TOOLTIP & UTILITIES
-        ================================================================
-        */
-        .simulation-count {
-            background: rgba(255,255,255,0.1);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.65rem;
-            color: var(--text-dim);
-            margin-left: auto;
-        }
-
-        /* ================================================================
-        7.0 RESPONSIVE DESIGN
-        ================================================================
-        */
-        @media (max-width: 1200px) {
-            .tutor-panel { display: none; }
-        }
-
-        @media (max-width: 800px) {
-            .sidebar { display: none; }
-        }
+        /* CHAT BOX */
+        .chat-area { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.85rem; scrollbar-width: none; }
+        .bubble { margin-bottom: 12px; padding: 10px; border-radius: 10px; line-height: 1.5; }
+        .b-nova { background: rgba(79, 172, 254, 0.05); border-left: 2px solid var(--primary); }
+        .b-user { background: rgba(255,255,255,0.05); color: var(--text-dim); }
+        
+        .engine-selector { font-size: 0.65rem; padding: 5px; border-radius: 5px; background: #21262d; color: white; border: none; cursor: pointer; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="brand-container">
-            <h1>NextGen Academy</h1>
-            <p>Smartboard OS v3.0</p>
-        </div>
-
-        <div class="search-area">
-            <input type="text" class="search-bar" id="simSearch" placeholder="Search simulations..." oninput="filterSimulations()">
-        </div>
-
-        <nav class="nav-list" id="navContent">
-            <div class="category-label">Chemistry & Matter</div>
-            <button class="sim-btn active" onclick="loadSim('build-an-atom', 'Build an Atom', this)">⚛️ Build an Atom <span class="simulation-count">v2.1</span></button>
-            <button class="sim-btn" onclick="loadSim('acid-base-solutions', 'Acid-Base Solutions', this)">🧪 Acid-Base Solutions</button>
-            <button class="sim-btn" onclick="loadSim('balancing-chemical-equations', 'Balancing Equations', this)">⚖️ Balancing Equations</button>
-            <button class="sim-btn" onclick="loadSim('beers-law-lab', 'Beers Law Lab', this)">🔦 Beers Law Lab</button>
-            <button class="sim-btn" onclick="loadSim('molarity', 'Molarity Lab', this)">💧 Molarity</button>
-            <button class="sim-btn" onclick="loadSim('ph-scale', 'pH Scale', this)">🩸 pH Scale</button>
-            <button class="sim-btn" onclick="loadSim('ph-scale-basics', 'pH Scale Basics', this)">🌡️ pH Basics</button>
-            <button class="sim-btn" onclick="loadSim('concentration', 'Concentration', this)">🍵 Concentration</button>
-
-            <div class="category-label">Physics & Forces</div>
-            <button class="sim-btn" onclick="loadSim('forces-and-motion-basics', 'Forces & Motion', this)">🏎️ Forces & Motion</button>
-            <button class="sim-btn" onclick="loadSim('friction', 'Friction Study', this)">🔥 Friction</button>
-            <button class="sim-btn" onclick="loadSim('gravity-force-lab', 'Gravity Force Lab', this)">🪐 Gravity Force</button>
-            <button class="sim-btn" onclick="loadSim('energy-skate-park-basics', 'Energy Skate Park', this)">🛹 Energy Skate Park</button>
-            <button class="sim-btn" onclick="loadSim('wave-on-a-string', 'Wave Dynamics', this)">🌊 Wave on a String</button>
-            <button class="sim-btn" onclick="loadSim('under-pressure', 'Fluid Pressure', this)">🎈 Under Pressure</button>
-            
-            <div class="category-label">Electricity & Magnetism</div>
-            <button class="sim-btn" onclick="loadSim('ohms-law', 'Ohms Law', this)">⚡ Ohms Law</button>
-            <button class="sim-btn" onclick="loadSim('resistance-in-a-wire', 'Wire Resistance', this)">🧵 Wire Resistance</button>
-            <button class="sim-btn" onclick="loadSim('faradays-law', 'Faradays Law', this)">🧲 Faradays Law</button>
-            <button class="sim-btn" onclick="loadSim('john-travoltage', 'Static Electricity', this)">👞 John Travoltage</button>
-
-            <div class="category-label">Mathematics & Logic</div>
-            <button class="sim-btn" onclick="loadSim('area-builder', 'Area Builder', this)">📐 Area Builder</button>
-            <button class="sim-btn" onclick="loadSim('fraction-matcher', 'Fraction Matcher', this)">🍰 Fraction Matcher</button>
-            <button class="sim-btn" onclick="loadSim('graphing-lines', 'Graphing Lines', this)">📈 Graphing Lines</button>
-            <button class="sim-btn" onclick="loadSim('balancing-act', 'Balancing Act', this)">🪁 Balancing Act</button>
-        </nav>
+<div class="app-shell">
+    <aside class="sidebar-left">
+        <div style="padding: 20px; border-bottom: 1px solid var(--border);"><span class="brand">ACADEMY</span></div>
+        <div style="flex:1; overflow-y:auto; padding: 10px;" id="sim-list">
+            </div>
+        <button onclick="toggleSettings()" style="padding:10px; background:none; border:none; color:var(--primary); cursor:pointer; font-size:0.7rem;">⚙️ API SETTINGS</button>
     </aside>
 
-    <main class="main-container">
-        <header class="top-header">
-            <div class="active-sim-info">
-                <p style="margin:0; font-size:0.7rem; color:var(--text-dim); text-transform:uppercase;">Now Exploring</p>
-                <h2 id="currentSimTitle">Build an Atom</h2>
-            </div>
+    <main class="main-stage">
+        <div id="api-settings">
+            <h4 style="margin:0 0 10px 0;">API Gateways</h4>
+            <label style="font-size:0.7rem;">GEMINI API KEY</label>
+            <input type="password" id="gemini-key" placeholder="Enter Gemini Key...">
+            <label style="font-size:0.7rem;">GROQ API KEY</label>
+            <input type="password" id="groq-key" placeholder="Enter Groq Key...">
+            <button onclick="saveKeys()" style="width:100%; padding:8px; background:var(--primary); border:none; border-radius:5px; font-weight:bold; cursor:pointer;">SAVE CONFIG</button>
+        </div>
 
-            <div class="status-badge">
-                <div class="status-dot"></div>
-                System: 2026-STABLE
-            </div>
+        <header class="top-nav">
+            <div id="active-title" style="font-weight:600; font-size:0.9rem;">Initializing System...</div>
+            <select id="engine-choice" class="engine-selector">
+                <option value="gemini">Engine: Gemini 1.5</option>
+                <option value="groq">Engine: Groq (Llama 3)</option>
+            </select>
         </header>
 
-        <section class="visualizer-area">
-            <div class="iframe-wrapper">
-                <div id="loader">
-                    <div class="spinner"></div>
-                    <p style="margin-top:15px; font-size:0.8rem; color:var(--text-dim);">Initializing Simulation Data...</p>
-                </div>
-                <iframe id="mainFrame" src="./html/build-an-atom/latest/build-an-atom_en.html" onload="hideLoader()"></iframe>
-            </div>
-        </section>
+        <div class="iframe-container">
+            <iframe id="viewport" src="./html/build-an-atom/latest/build-an-atom_en.html"></iframe>
+        </div>
     </main>
 
-    <section class="tutor-panel">
-        <div class="tutor-header">
-            <div class="nova-avatar">N</div>
-            <div>
-                <h3 style="margin:0; font-size:1rem; color:white;">Nova AI Tutor</h3>
-                <span style="font-size:0.7rem; color:var(--accent-success);">Expert Intelligence Active</span>
-            </div>
+    <aside class="sidebar-right">
+        <div style="padding: 15px; border-bottom: 1px solid var(--border); font-weight:bold; font-size:0.8rem; letter-spacing:1px;">NOVA AI TUTOR</div>
+        <div class="chat-area" id="chat-stream">
+            <div class="bubble b-nova">Welcome, Anisul. Configure your API keys to enable the AI brain. Otherwise, I will use basic local routing.</div>
         </div>
-
-        <div class="chat-display" id="chatDisplay">
-            <div class="message msg-nova">
-                Welcome to NextGen Academy. I have analyzed your system. All 23 simulations are correctly mapped and ready for analysis.
-            </div>
-            <div class="message msg-nova">
-                You are currently looking at <strong>Build an Atom</strong>. This lab allows you to explore protons, neutrons, and electrons.
-            </div>
+        
+        <div class="voice-hub">
+            <button class="mic-btn" id="mic" onclick="handleVoiceAction()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </button>
+            <p id="mic-status" style="font-size:0.6rem; margin-top:10px; color:#94a3b8;">TAP GREEN TO START</p>
         </div>
+    </aside>
+</div>
 
-        <div class="chat-input-area">
-            <div class="input-box">
-                <input type="text" id="userInput" placeholder="Ask Nova a question..." onkeypress="if(event.key==='Enter') sendMessage()">
-                <button class="send-btn" onclick="sendMessage()">SEND</button>
-            </div>
-            <p style="font-size:0.6rem; color:var(--text-dim); text-align:center; margin-top:10px;">
-                Powered by NextGen AI Engine v3.0
-            </p>
-        </div>
-    </section>
+<script>
+    // 1. DYNAMIC DATABASE
+    const SIMS = {
+        'atom': { title: 'Build an Atom', path: './html/build-an-atom/latest/build-an-atom_en.html', keywords: ['atom', 'proton', 'neutron', 'electron'] },
+        'ph': { title: 'pH Scale', path: './html/ph-scale/latest/ph-scale_en.html', keywords: ['ph', 'acid', 'base', 'liquid'] },
+        'forces': { title: 'Forces & Motion', path: './html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html', keywords: ['force', 'motion', 'push', 'friction'] },
+        'gravity': { title: 'Gravity Lab', path: './html/gravity-force-lab/latest/gravity-force-lab_en.html', keywords: ['gravity', 'mass', 'distance'] },
+        'ohms': { title: 'Ohms Law', path: './html/ohms-law/latest/ohms-law_en.html', keywords: ['voltage', 'ohms', 'current', 'electricity'] },
+        'molarity': { title: 'Molarity', path: './html/molarity/latest/molarity_en.html', keywords: ['molarity', 'solution', 'solute'] },
+        'wave': { title: 'Wave Dynamics', path: './html/wave-on-a-string/latest/wave-on-a-string_en.html', keywords: ['wave', 'oscillation', 'frequency'] }
+    };
 
-    <script>
-        /* ----------------------------------------------------
-        1. SIMULATION LOADING SYSTEM
-        ----------------------------------------------------
-        */
-        function loadSim(folder, title, btn) {
-            const frame = document.getElementById('mainFrame');
-            const loader = document.getElementById('loader');
-            const titleDisplay = document.getElementById('currentSimTitle');
-
-            // Show Loader
-            loader.style.opacity = '1';
-            loader.style.display = 'flex';
-
-            // Set Active Button
-            document.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-
-            // Update UI
-            titleDisplay.textContent = title;
-            
-            // Build Path (Supports both folder types)
-            // If the simulation is "basics", PhET often uses that in the filename too.
-            const path = `./html/${folder}/latest/${folder}_en.html`;
-            
-            frame.src = path;
-
-            // Log for Nova
-            addNovaMessage(`System re-configured. I've initialized the <strong>${title}</strong> environment. What would you like to calculate?`);
+    // 2. CORE LOGIC
+    function initNav() {
+        const list = document.getElementById('sim-list');
+        for (let key in SIMS) {
+            let btn = document.createElement('button');
+            btn.className = 'nav-item';
+            btn.innerHTML = SIMS[key].title;
+            btn.onclick = () => switchSim(key);
+            list.appendChild(btn);
         }
+        document.getElementById('gemini-key').value = localStorage.getItem('gemini_key') || '';
+        document.getElementById('groq-key').value = localStorage.getItem('groq_key') || '';
+    }
 
-        function hideLoader() {
-            const loader = document.getElementById('loader');
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 500);
-            }, 800);
+    function switchSim(key) {
+        if(!SIMS[key]) return;
+        document.getElementById('viewport').src = SIMS[key].path;
+        document.getElementById('active-title').textContent = SIMS[key].title;
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    }
+
+    function toggleSettings() { 
+        const s = document.getElementById('api-settings');
+        s.style.display = (s.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function saveKeys() {
+        localStorage.setItem('gemini_key', document.getElementById('gemini-key').value);
+        localStorage.setItem('groq_key', document.getElementById('groq-key').value);
+        toggleSettings();
+        addMsg("System: API Keys Updated.", "nova");
+    }
+
+    // 3. VOICE ENGINE
+    let isListening = false;
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.continuous = true; 
+    recognition.lang = 'en-US';
+
+    function handleVoiceAction() {
+        const btn = document.getElementById('mic');
+        const status = document.getElementById('mic-status');
+
+        if(!isListening) {
+            isListening = true;
+            btn.classList.add('recording');
+            status.textContent = "LISTENING... TAP RED TO END";
+            recognition.start();
+        } else {
+            isListening = false;
+            btn.classList.remove('recording');
+            status.textContent = "PROCESSING...";
+            recognition.stop();
         }
+    }
 
-        /* ----------------------------------------------------
-        2. NOVA AI INTERACTION ENGINE
-        ----------------------------------------------------
-        */
-        function sendMessage() {
-            const input = document.getElementById('userInput');
-            const display = document.getElementById('chatDisplay');
-            const text = input.value.trim();
+    recognition.onresult = (event) => {
+        const text = event.results[event.results.length - 1][0].transcript;
+        processAI(text);
+    };
 
-            if(!text) return;
+    // 4. DUAL AI ENGINE INTEGRATION
+    async function processAI(userInput) {
+        addMsg(userInput, "user");
+        
+        const engine = document.getElementById('engine-choice').value;
+        const gemKey = localStorage.getItem('gemini_key');
+        const groqKey = localStorage.getItem('groq_key');
 
-            // Add User Message
-            const userDiv = document.createElement('div');
-            userDiv.className = 'message msg-user';
-            userDiv.textContent = text;
-            display.appendChild(userDiv);
-
-            input.value = '';
-            display.scrollTop = display.scrollHeight;
-
-            // Simulate Nova "Thinking"
-            setTimeout(() => {
-                generateNovaResponse(text);
-            }, 800);
-        }
-
-        function addNovaMessage(htmlContent) {
-            const display = document.getElementById('chatDisplay');
-            const novaDiv = document.createElement('div');
-            novaDiv.className = 'message msg-nova';
-            novaDiv.innerHTML = htmlContent;
-            display.appendChild(novaDiv);
-            display.scrollTop = display.scrollHeight;
-        }
-
-        function generateNovaResponse(input) {
-            const query = input.toLowerCase();
-            let response = "That is an interesting observation. How can I help you visualize the data in this simulation?";
-
-            if(query.includes("hello") || query.includes("hi")) {
-                response = "Greetings. I am Nova, your NextGen Academy tutor. Ready to begin our scientific investigation?";
-            } else if (query.includes("how to use")) {
-                response = "Use the sidebar to switch between labs. Inside the board, you can drag objects and toggle measurement tools.";
-            } else if (query.includes("atom")) {
-                response = "Atomic structure depends on the balance of subatomic particles. Protons define the element, while electrons determine chemical properties.";
-            } else if (query.includes("gravity")) {
-                response = "According to Newton's law: $F = G \frac{m_1 m_2}{r^2}$. You can see this force increase as you bring the masses closer in the Gravity Lab.";
-            } else if (query.includes("acid")) {
-                response = "The pH scale is logarithmic. A change of 1 pH unit represents a 10-fold change in hydrogen ion concentration.";
+        // Automatic Navigation Logic
+        for (let key in SIMS) {
+            if (SIMS[key].keywords.some(k => userInput.toLowerCase().includes(k))) {
+                switchSim(key);
+                break;
             }
-
-            addNovaMessage(response);
         }
 
-        /* ----------------------------------------------------
-        3. SEARCH & FILTER ENGINE
-        ----------------------------------------------------
-        */
-        function filterSimulations() {
-            const searchTerm = document.getElementById('simSearch').value.toLowerCase();
-            const buttons = document.querySelectorAll('.sim-btn');
-            const categories = document.querySelectorAll('.category-label');
+        let responseText = "I'm ready to help. Please check your API configuration.";
 
-            buttons.forEach(btn => {
-                const text = btn.textContent.toLowerCase();
-                if(text.includes(searchTerm)) {
-                    btn.style.display = 'flex';
-                } else {
-                    btn.style.display = 'none';
-                }
-            });
-
-            // Hide labels if no buttons in that category are visible
-            categories.forEach(label => {
-                let next = label.nextElementSibling;
-                let visibleCount = 0;
-                while(next && next.classList.contains('sim-btn')) {
-                    if(next.style.display !== 'none') visibleCount++;
-                    next = next.nextElementSibling;
-                }
-                label.style.display = (visibleCount === 0) ? 'none' : 'flex';
-            });
+        try {
+            if (engine === 'groq' && groqKey) {
+                responseText = await callGroq(userInput, groqKey);
+            } else if (gemKey) {
+                responseText = await callGemini(userInput, gemKey);
+            }
+        } catch (e) {
+            responseText = "Connection error. Ensure your API key is valid and you have an active internet connection.";
         }
 
-        /* ----------------------------------------------------
-        4. SYSTEM INITIALIZATION
-        ----------------------------------------------------
-        */
-        window.onload = () => {
-            console.log("NextGen OS Initialized Successfully.");
-            // Set initial state
-            addNovaMessage("All systems are operational. I am tracking your progress in the 2026 academic term.");
-        };
+        addMsg(responseText, "nova");
+        speak(responseText);
+    }
 
-    </script>
+    async function callGroq(text, key) {
+        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${key}`, "Content-Type": "application/json" },
+            body: JSON.stringify({ model: "llama3-8b-8192", messages: [{ role: "system", content: "You are Nova, a science tutor for NextGen Academy." }, { role: "user", content: text }] })
+        });
+        const data = await res.json();
+        return data.choices[0].message.content;
+    }
+
+    async function callGemini(text, key) {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contents: [{ parts: [{ text: `You are Nova, an AI tutor. Explain briefly: ${text}` }] }] })
+        });
+        const data = await res.json();
+        return data.candidates[0].content.parts[0].text;
+    }
+
+    function addMsg(text, sender) {
+        const chat = document.getElementById('chat-stream');
+        const div = document.createElement('div');
+        div.className = `bubble b-${sender}`;
+        div.textContent = text;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    function speak(text) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.1;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    initNav();
+</script>
 </body>
 </html>
