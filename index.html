@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextGen Academy | Scientific Logic Master</title>
+    <title>NextGen Academy | Neural Director Elite</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --primary: #4facfe;
-            --primary-glow: rgba(79, 172, 254, 0.4);
+            --primary-glow: rgba(79, 172, 254, 0.5);
             --secondary: #00f2fe;
-            --bg: #010206;
-            --panel: rgba(10, 14, 22, 0.99);
-            --border: rgba(255, 255, 255, 0.04);
+            --bg: #010204;
+            --panel: rgba(10, 14, 20, 0.99);
+            --border: rgba(255, 255, 255, 0.05);
             --mic-ready: #10b981;
             --mic-active: #ef4444;
             --sidebar-w: 180px;
@@ -27,12 +27,11 @@
 
         .app-shell { display: flex; width: 100vw; height: 100vh; }
 
-        /* EDGE SIDEBARS */
+        /* CINEMA-STAGE LAYOUT */
         .sidebar-l { width: var(--sidebar-w); background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; }
         .sidebar-r { width: var(--tutor-w); background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; z-index: 50; }
         .main-stage { flex: 1; display: flex; flex-direction: column; background: #000; position: relative; }
 
-        /* BRANDING */
         .brand { padding: 25px 15px; text-align: center; border-bottom: 1px solid var(--border); }
         .brand h1 { margin: 0; font-size: 0.9rem; font-weight: 900; background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; text-transform: uppercase; }
 
@@ -43,24 +42,18 @@
         .nav-item.active { color: var(--primary); background: rgba(79, 172, 254, 0.05); border-left: 3px solid var(--primary); font-weight: bold; }
 
         /* VISUAL BOARD */
-        .board-header { height: 50px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--border); }
+        .board-header { height: 50px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.6); border-bottom: 1px solid var(--border); }
         .board-visual { flex: 1; position: relative; overflow: hidden; }
         iframe { width: 100%; height: 100%; border: none; background: #fff; transition: opacity 0.5s ease; }
 
-        /* CHAT & THE "WORKING" SCRATCHPAD */
+        /* TUTOR INTERFACE */
         .chat-display { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.8rem; scrollbar-width: none; display: flex; flex-direction: column; gap: 15px; }
         .bubble { padding: 12px; border-radius: 12px; line-height: 1.5; animation: slideUp 0.3s ease; max-width: 95%; }
         .b-nova { background: rgba(255, 255, 255, 0.02); border-left: 2px solid var(--primary); color: #e2e8f0; }
         .b-user { background: var(--primary); color: #000; font-weight: 600; align-self: flex-end; text-align: right; box-shadow: 0 5px 15px var(--primary-glow); }
 
-        /* THE WORKING BOARD UI */
-        .logic-board {
-            background: rgba(0,0,0,0.5); border: 1px solid var(--primary);
-            border-radius: 8px; padding: 15px; margin-top: 10px;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--secondary);
-            display: flex; flex-direction: column; gap: 8px;
-        }
-        .formula { font-size: 1.1rem; color: #fff; text-align: center; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        /* THE "DIRECTOR" AUTO-ACTION TAGS */
+        .action-tag { font-size: 0.65rem; color: var(--secondary); font-weight: bold; font-family: 'JetBrains Mono'; margin-top: 5px; display: block; border: 1px solid rgba(0, 242, 254, 0.2); padding: 5px; border-radius: 5px; background: rgba(0,0,0,0.3); }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -88,8 +81,8 @@
 
         <main class="main-stage">
             <header class="board-header">
-                <div id="activeTitle" style="font-weight:700; font-size:0.85rem; letter-spacing:1px; text-transform:uppercase; color:var(--primary);">Initializing...</div>
-                <div id="engineLabel" style="font-size:0.6rem; color:#475569; font-weight:900;">LOGIC ENGINE v13.0 ACTIVE</div>
+                <div id="activeTitle" style="font-weight:700; font-size:0.85rem; letter-spacing:1px; text-transform:uppercase; color:var(--primary);">System Ready</div>
+                <div id="engineLabel" style="font-size:0.6rem; color:#475569; font-weight:900;">NEURAL DIRECTOR v14.0 ACTIVE</div>
             </header>
             <div class="board-visual">
                 <iframe id="viewport" src="./html/build-an-atom/latest/build-an-atom_en.html"></iframe>
@@ -97,13 +90,13 @@
         </main>
 
         <aside class="sidebar-r">
-            <div style="padding: 15px; border-bottom: 1px solid var(--border); font-weight: 900; font-size: 0.75rem; color: var(--primary);">NOVA AI TUTOR</div>
+            <div style="padding: 15px; border-bottom: 1px solid var(--border); font-weight: 900; font-size: 0.75rem; color: var(--primary);">NOVA DIRECTOR</div>
             <div class="chat-display" id="chatStream">
-                <div class="bubble b-nova">Welcome Anisul. I have enabled <b>Scientific Logic</b>. When you ask about a topic, I will provide the simulation visuals AND a mathematical "working" board in this chat.</div>
+                <div class="bubble b-nova">Welcome. I am now in <b>Director Mode</b>. When you ask a question, I will not only explain, but I will "click" and change simulation screens to show you exactly what I am talking about.</div>
             </div>
             <div class="voice-hub">
-                <span id="micStatus" style="font-size:0.6rem; font-weight:bold; color:#475569; text-transform:uppercase;">TAP TO INTERRUPT</span>
-                <button class="mic-btn" id="micBtn" onclick="handleVoiceAction()">
+                <span id="micStatus" style="font-size:0.6rem; font-weight:bold; color:#475569; text-transform:uppercase;">GREEN: READY</span>
+                <button class="mic-btn" id="micBtn" onclick="handleInterruptionAction()">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
                         <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
                     </svg>
@@ -114,34 +107,31 @@
 
     <div class="modal" id="apiModal">
         <div class="modal-card">
-            <h2 style="margin:0 0 10px; font-size:1.1rem; color:white;">Logic Infrastructure</h2>
-            <input type="password" id="groqIn" placeholder="Enter Groq Key (Primary)">
-            <input type="password" id="gemIn" placeholder="Enter Gemini Key (Secondary)">
-            <button class="btn-save" onclick="saveApi()">ACTIVATE LOGIC</button>
+            <h2 style="margin:0 0 10px; font-size:1.1rem; color:white;">Neural Infrastructure</h2>
+            <input type="password" id="groqIn" placeholder="Groq API Key (Primary)">
+            <input type="password" id="gemIn" placeholder="Gemini API Key (Secondary)">
+            <button class="btn-save" onclick="saveApi()">ACTIVATE DIRECTOR</button>
         </div>
     </div>
 
     <script>
-        // 1. OMNI-SCIENCE DATABASE (23 WORKING MODULES)
+        // 1. OMNI-SCIENCE DATABASE (WITH MULTI-SCREEN CAPABILITY)
         const MODULES = {
-            'atom': { name: 'Build an Atom', folder: 'build-an-atom', keys: ['atom', 'proton', 'electron'], logic: 'Protons define the element. Neutrons stabilize. Electrons balance charge. $Net Charge = p - e$' },
-            'ph': { name: 'pH Scale', folder: 'ph-scale', keys: ['ph', 'acid', 'base', 'liquid'], logic: 'pH represents Hydrogen ion concentration. $pH = -log_{10}[H^+]$ (Scale 0-14)' },
-            'forces': { name: 'Forces & Motion', folder: 'forces-and-motion-basics', keys: ['force', 'motion', 'friction'], logic: 'Net Force determines acceleration. $F = ma$. Friction opposes motion: $f = \mu N$' },
-            'gravity': { name: 'Gravity Lab', folder: 'gravity-force-lab', keys: ['gravity', 'mass', 'distance'], logic: 'Gravity follows the Inverse Square Law. $F_g = G \frac{m_1 m_2}{r^2}$' },
-            'ohms': { name: 'Ohms Law', folder: 'ohms-law', keys: ['voltage', 'ohms', 'current', 'electricity'], logic: 'V=IR. Voltage (V) = Current (I) × Resistance (R).' },
-            'molarity': { name: 'Molarity', folder: 'molarity', keys: ['molarity', 'solution', 'dissolve'], logic: 'Concentration of solute in a solvent. $M = \frac{n (moles)}{V (liters)}$' },
-            'wave': { name: 'Wave Dynamics', folder: 'wave-on-a-string', keys: ['wave', 'oscillation', 'amplitude'], logic: 'Wave speed depends on frequency and wavelength. $v = f\lambda$' },
-            'acid-base': { name: 'Acid-Base Solutions', folder: 'acid-base-solutions', keys: ['chemical reaction'] },
-            'area': { name: 'Area Builder', folder: 'area-builder', keys: ['area', 'math area'], logic: 'Space occupied. $Area = L \times W$ (for rectangles)' },
-            'balancing-act': { name: 'Balancing Act', folder: 'balancing-act', keys: ['balance', 'torque'], logic: 'Mechanical equilibrium. $\sum \tau = 0$ (Sum of Torques is zero)' },
-            'beers': { name: 'Beers Law Lab', folder: 'beers-law-lab', keys: ['beers', 'light'], logic: 'Light absorption. $A = \epsilon \cdot c \cdot l$' },
-            'energy': { name: 'Energy Skate Park', folder: 'energy-skate-park-basics', keys: ['skate', 'potential energy'], logic: 'Total Mechanical Energy is conserved. $E = PE + KE$' },
-            'faraday': { name: 'Faradays Law', folder: 'faradays-law', keys: ['magnet', 'faraday'], logic: 'Electromagnetic induction. $\mathcal{E} = -N \frac{d\Phi_B}{dt}$' },
-            'static': { name: 'John Travoltage', folder: 'john-travoltage', keys: ['static', 'spark'], logic: 'Accumulation of charge. $V = k \frac{Q}{r}$' },
-            'pressure': { name: 'Under Pressure', folder: 'under-pressure', keys: ['pressure', 'water'], logic: 'Pressure increases with depth. $P = P_0 + \rho gh$' }
+            'atom': { name: 'Build an Atom', folder: 'build-an-atom', keys: ['atom', 'proton', 'electron'], screens: { base: 1, symbol: 2, game: 3 } },
+            'ph': { name: 'pH Scale', folder: 'ph-scale', keys: ['ph', 'acid', 'base', 'liquid'], screens: { macro: 1, micro: 2, custom: 3 } },
+            'forces': { name: 'Forces & Motion', folder: 'forces-and-motion-basics', keys: ['force', 'motion', 'friction'], screens: { net: 1, motion: 2, friction: 3, acceleration: 4 } },
+            'gravity': { name: 'Gravity Lab', folder: 'gravity-force-lab', keys: ['gravity', 'mass', 'distance'], screens: { base: 1 } },
+            'ohms': { name: 'Ohms Law', folder: 'ohms-law', keys: ['voltage', 'ohms', 'current', 'electricity'], screens: { base: 1 } },
+            'molarity': { name: 'Molarity', folder: 'molarity', keys: ['molarity', 'solution', 'dissolve'], screens: { base: 1 } },
+            'wave': { name: 'Wave Dynamics', folder: 'wave-on-a-string', keys: ['wave', 'oscillation', 'amplitude'], screens: { base: 1 } },
+            'energy': { name: 'Energy Skate Park', folder: 'energy-skate-park-basics', keys: ['skate', 'energy', 'kinetic'], screens: { intro: 1, friction: 2, track: 3 } },
+            'static': { name: 'John Travoltage', folder: 'john-travoltage', keys: ['static', 'shock', 'spark'], screens: { base: 1 } },
+            'pressure': { name: 'Under Pressure', folder: 'under-pressure', keys: ['pressure', 'water'], screens: { base: 1 } }
         };
 
-        // 2. SYSTEM BOOT
+        let currentActiveSim = 'atom';
+
+        // 2. BOOTSTRAP
         function boot() {
             const menu = document.getElementById('simMenu');
             for (let k in MODULES) {
@@ -149,50 +139,38 @@
                 b.className = 'nav-item';
                 b.textContent = MODULES[k].name;
                 b.id = `btn-${k}`;
-                b.onclick = () => launch(k);
+                b.onclick = () => launchDirector(k);
                 menu.appendChild(b);
             }
-            document.getElementById('groqIn').value = localStorage.getItem('nx_v13_groq') || '';
-            document.getElementById('gemIn').value = localStorage.getItem('nx_v13_gem') || '';
-            launch('atom');
+            document.getElementById('groqIn').value = localStorage.getItem('nx_v14_groq') || '';
+            document.getElementById('gemIn').value = localStorage.getItem('nx_v14_gem') || '';
+            launchDirector('atom');
         }
 
-        function launch(key) {
+        // LAUNCH & SCREEN CONTROL
+        function launchDirector(key, screenNum = 1) {
             if(!MODULES[key]) return;
+            currentActiveSim = key;
             const view = document.getElementById('viewport');
-            view.style.opacity = '0.3';
-            setTimeout(() => {
-                view.src = `./html/${MODULES[key].folder}/latest/${MODULES[key].folder}_en.html`;
-                document.getElementById('activeTitle').textContent = MODULES[key].name;
-                document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-                document.getElementById(`btn-${key}`).classList.add('active');
-                view.style.opacity = '1';
-                
-                // Show "The Working" Logic Board
-                if(MODULES[key].logic) showLogicBoard(MODULES[key]);
-            }, 300);
+            
+            // PhET supports screen selection via query parameters
+            const url = `./html/${MODULES[key].folder}/latest/${MODULES[key].folder}_en.html?screens=${screenNum}`;
+            
+            view.src = url;
+            document.getElementById('activeTitle').textContent = `${MODULES[key].name} (Screen ${screenNum})`;
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${key}`).classList.add('active');
         }
 
-        function showLogicBoard(mod) {
-            const logicHtml = `
-                <div class="logic-board">
-                    <div style="font-weight:bold; font-size:0.6rem; color:white;">SCIENTIFIC PROOF: ${mod.name.toUpperCase()}</div>
-                    <div class="formula">${mod.logic.split('.').pop()}</div>
-                    <div style="opacity:0.8;">Variables Detected: p (protons), e (electrons), m (mass), g (gravity).</div>
-                </div>
-            `;
-            addChat(logicHtml, "nova");
-        }
-
-        // 3. VOICE & INTERRUPT ENGINE
+        // 3. THE "DIRECTOR" VOICE INTERRUPT ENGINE
         let listening = false;
         const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRec();
         recognition.continuous = true;
         recognition.lang = 'en-US';
 
-        function handleVoiceAction() {
-            // INTERRUPT: Cancel speech mid-sentence
+        function handleInterruptionAction() {
+            // STOP NOVA IMMEDIATELY ON CLICK
             if (window.speechSynthesis.speaking) {
                 window.speechSynthesis.cancel();
             }
@@ -203,64 +181,82 @@
             if (!listening) {
                 listening = true;
                 btn.classList.add('active');
-                status.textContent = "Listening...";
+                status.textContent = "DIRECTOR LISTENING...";
                 recognition.start();
             } else {
                 listening = false;
                 btn.classList.remove('active');
-                status.textContent = "Processing...";
+                status.textContent = "PROCESSING...";
                 recognition.stop();
             }
         }
 
         recognition.onresult = (e) => {
             const text = e.results[e.results.length - 1][0].transcript.toLowerCase();
-            processLogic(text);
+            neuralDirect(text);
         };
 
-        // 4. NEURAL LOGIC ENGINE (ROUTING + WORKING)
-        async function processLogic(input) {
+        // 4. THE NEURAL DIRECTOR (REAL-TIME SCRIPTING)
+        async function neuralDirect(input) {
             addChat(input, "user");
 
-            // INSTANT NAVIGATION
+            // INSTANT ROUTER: Navigates board to the correct topic
             for (let k in MODULES) {
                 if (MODULES[k].keys.some(word => input.includes(word))) {
-                    launch(k);
+                    launchDirector(k);
                     break;
                 }
             }
 
-            const groqK = localStorage.getItem('nx_v13_groq');
-            const gemK = localStorage.getItem('nx_v13_gem');
-            let response = "System needs API Keys to generate logical proofs.";
+            const groqK = localStorage.getItem('nx_v14_groq');
+            const gemK = localStorage.getItem('nx_v14_gem');
+            let response = "API Credentials missing. Open Admin settings.";
 
             try {
                 if (groqK) {
-                    response = await fetchGroq(input, groqK);
+                    response = await fetchGroqDirector(input, groqK);
                 } else if (gemK) {
-                    response = await fetchGemini(input, gemK);
+                    response = await fetchGeminiDirector(input, gemK);
                 }
-            } catch (err) { response = "Network timeout. Logic engine rebooting..."; }
+            } catch (err) { response = "Network glitch. Re-syncing visual director..."; }
 
+            // ANALYZE RESPONSE FOR SCREEN COMMANDS
+            processDirectorTags(response);
             addChat(response, "nova");
             narrate(response);
         }
 
-        async function fetchGroq(t, k) {
+        // TAG PROCESSOR: Nova can say [GOTO:screen_2] inside the text
+        function processDirectorTags(text) {
+            const regex = /\[GOTO:screen_(\d+)\]/i;
+            const match = text.match(regex);
+            if (match) {
+                const screenNum = match[1];
+                launchDirector(currentActiveSim, screenNum);
+            }
+        }
+
+        async function fetchGroqDirector(t, k) {
             const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                 method: "POST",
                 headers: { "Authorization": `Bearer ${k}`, "Content-Type": "application/json" },
-                body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{ role: "system", content: "You are Nova, an AI tutor. Provide brief scientific logic for the user's question." }, { role: "user", content: t }] })
+                body: JSON.stringify({ 
+                    model: "llama-3.3-70b-versatile", 
+                    messages: [
+                        { role: "system", content: "You are Nova, an elite scientific director. Explain topics and include the tag [GOTO:screen_X] (X is 1, 2, or 3) when you want to change the visual screen to match your point. For Atom: 1=Base, 2=Symbol, 3=Game. For Forces: 1=Net Force, 2=Motion, 3=Friction." }, 
+                        { role: "user", content: t }
+                    ] 
+                })
             });
             const data = await res.json();
             return data.choices[0].message.content;
         }
 
-        async function fetchGemini(t, k) {
+        async function fetchGeminiDirector(t, k) {
             const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `Explain briefly with math formulas: ${t}` }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Explain briefly and include [GOTO:screen_2] tags to switch visuals: ${t}` }] }] })
             });
             const data = await res.json();
             return data.candidates[0].content.parts[0].text;
@@ -271,24 +267,30 @@
             const display = document.getElementById('chatStream');
             const div = document.createElement('div');
             div.className = `bubble b-${c}`;
-            div.innerHTML = t;
+            
+            // Clean tags from the chat view for a premium look
+            const cleanText = t.replace(/\[GOTO:screen_\d+\]/gi, '<span class="action-tag">Visual Switched to Active Screen</span>');
+            div.innerHTML = cleanText;
+            
             display.appendChild(div);
             display.scrollTop = display.scrollHeight;
         }
 
         function narrate(t) {
-            const utterance = new SpeechSynthesisUtterance(t);
-            utterance.rate = 1.1;
+            // Remove tags from the voice synthesis
+            const cleanText = t.replace(/\[GOTO:screen_\d+\]/gi, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.rate = 1.05;
             window.speechSynthesis.speak(utterance);
         }
 
         function toggleModal(s) { document.getElementById('apiModal').style.display = s ? 'flex' : 'none'; }
         
         function saveApi() {
-            localStorage.setItem('nx_v13_groq', document.getElementById('groqIn').value.trim());
-            localStorage.setItem('nx_v13_gem', document.getElementById('gemIn').value.trim());
+            localStorage.setItem('nx_v14_groq', document.getElementById('groqIn').value.trim());
+            localStorage.setItem('nx_v14_gem', document.getElementById('gemIn').value.trim());
             toggleModal(false);
-            addChat("System: Mathematical Logic Engine Online.", "nova");
+            addChat("Director Systems Active. I can now control simulation screens based on our conversation.", "nova");
         }
 
         window.onload = boot;
