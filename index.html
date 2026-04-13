@@ -1,242 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextGen Academy | Elite Smartboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #4facfe;
-            --secondary: #00f2fe;
-            --bg: #020408;
-            --panel: rgba(10, 14, 20, 0.98);
-            --border: rgba(255, 255, 255, 0.05);
-            --mic-ready: #10b981; /* Green */
-            --mic-active: #ef4444; /* Red */
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NextGen Academy</title>
 
-        body, html { margin: 0; padding: 0; background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; height: 100vh; overflow: hidden; }
-        
-        /* CINEMA-WIDE LAYOUT */
-        .app-shell { display: flex; width: 100vw; height: 100vh; }
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
-        /* NARROW SIDEBARS FOR BIGGER BOARD */
-        .sidebar-left { width: 180px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10; }
-        .sidebar-right { width: 260px; background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10; }
-        .main-stage { flex: 1; display: flex; flex-direction: column; background: #000; position: relative; }
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #020617;
+      color: white;
+    }
 
-        /* HEADER */
-        .top-nav { height: 50px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; background: rgba(0,0,0,0.6); }
-        .brand { font-weight: 800; font-size: 0.9rem; letter-spacing: 1px; color: var(--primary); }
+    header {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+      background: rgba(255,255,255,0.05);
+    }
 
-        /* MAXIMIZED BOARD */
-        .iframe-container { flex: 1; margin: 0; background: #000; }
-        iframe { width: 100%; height: 100%; border: none; background: #fff; transition: opacity 0.3s; }
+    .logo { color: #38bdf8; font-weight: bold; }
 
-        /* API CONFIG OVERLAY */
-        #api-config { position: absolute; top: 60px; right: 20px; background: #161b22; padding: 15px; border-radius: 10px; border: 1px solid var(--primary); z-index: 1000; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
-        label { font-size: 0.6rem; color: var(--primary); font-weight: bold; text-transform: uppercase; }
-        input[type="password"] { width: 100%; background: #0d1117; border: 1px solid #30363d; color: white; padding: 8px; border-radius: 5px; margin: 5px 0 15px; font-size: 0.75rem; }
-        
-        /* MIC BUTTON (GREEN -> RED TOGGLE) */
-        .voice-section { padding: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; }
-        .mic-btn { 
-            width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer; 
-            transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; 
-            background: var(--mic-ready); box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-        }
-        .mic-btn.recording { background: var(--mic-active); animation: pulse 1.2s infinite; box-shadow: 0 0 30px rgba(239, 68, 68, 0.5); }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    .container { padding: 20px; }
 
-        /* NAV ITEMS */
-        .nav-item { width: 100%; padding: 12px 15px; background: transparent; border: none; color: #64748b; text-align: left; cursor: pointer; font-size: 0.75rem; transition: 0.2s; border-bottom: 1px solid rgba(255,255,255,0.01); }
-        .nav-item:hover { color: #fff; background: rgba(255,255,255,0.03); }
-        .nav-item.active { color: var(--primary); border-left: 3px solid var(--primary); background: rgba(79, 172, 254, 0.05); }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
 
-        /* CHAT BUBBLES */
-        .chat-stream { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.8rem; scrollbar-width: none; }
-        .bubble { margin-bottom: 15px; padding: 12px; border-radius: 10px; line-height: 1.6; animation: slideIn 0.3s ease; }
-        .nova { background: rgba(79, 172, 254, 0.08); border-left: 2px solid var(--primary); color: #e2e8f0; }
-        .user { background: rgba(255,255,255,0.03); color: #94a3b8; font-style: italic; text-align: right; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .status-text { font-size: 0.6rem; color: #475569; text-align: center; margin-bottom: 5px; text-transform: uppercase; }
-    </style>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .card {
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .card:hover { background: rgba(56,189,248,0.2); }
+
+    iframe {
+      width: 100%;
+      height: 500px;
+      margin-top: 20px;
+      border: none;
+    }
+
+    .mic {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #38bdf8;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      cursor:pointer;
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="app-shell">
-    <aside class="sidebar-left">
-        <div style="padding: 15px; border-bottom: 1px solid var(--border); text-align:center;"><span class="brand">ACADEMY</span></div>
-        <div style="flex:1; overflow-y:auto;" id="sim-menu"></div>
-        <button onclick="toggleApi()" style="padding:10px; background:none; border:none; color:#333; cursor:pointer; font-size:0.6rem; font-weight:bold;">API CONFIG</button>
-    </aside>
+<header>
+  <div class="logo">NextGen Academy</div>
+  <div>Teacher: Nova</div>
+</header>
 
-    <main class="main-stage">
-        <div id="api-config">
-            <h5 style="margin:0 0 10px 0; color:white;">AI Engine Settings</h5>
-            <label>Groq API (Primary)</label>
-            <input type="password" id="groq-key" placeholder="Enter Groq Key...">
-            <label>Gemini API (Secondary)</label>
-            <input type="password" id="gemini-key" placeholder="Enter Gemini Key...">
-            <button onclick="saveApi()" style="width:100%; padding:10px; background:var(--primary); border:none; border-radius:5px; font-weight:bold; cursor:pointer; color:black;">ACTIVATE ENGINES</button>
-        </div>
+<div class="container">
 
-        <header class="top-nav">
-            <div id="sim-title" style="font-weight:600; font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;">Initializing Board...</div>
-            <div id="engine-status" style="font-size:0.6rem; color:var(--mic-ready); font-weight:bold;">READY</div>
-        </header>
+  <input type="text" id="search" placeholder="Search simulations...">
 
-        <div class="iframe-container">
-            <iframe id="lab-frame" src="./html/build-an-atom/latest/build-an-atom_en.html"></iframe>
-        </div>
-    </main>
+  <div class="grid" id="grid"></div>
 
-    <aside class="sidebar-right">
-        <div style="padding: 15px; border-bottom: 1px solid var(--border); font-weight:bold; font-size:0.75rem; color:var(--primary);">NOVA INTELLIGENCE</div>
-        <div class="chat-stream" id="chat">
-            <div class="bubble nova">Hello Anisul. I am Nova. Click the <b>Green Mic</b> to speak. I will automatically switch the board to match your topic.</div>
-        </div>
-        
-        <div class="voice-section">
-            <div class="status-text" id="engine-mode">Status: Standby</div>
-            <button class="mic-btn" id="mic-trigger" onclick="toggleMic()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-            </button>
-            <p id="mic-hint" style="font-size:0.6rem; margin-top:10px; color:#475569; font-weight:bold;">TAP GREEN TO TALK</p>
-        </div>
-    </aside>
+  <iframe id="viewer"></iframe>
+
 </div>
 
+<div class="mic" onclick="voice()">🎤</div>
+
 <script>
-    // 1. SIMULATION DATABASE
-    const ACADEMY_DB = {
-        'atom': { name: 'Build an Atom', path: './html/build-an-atom/latest/build-an-atom_en.html', keywords: ['atom', 'proton', 'neutron', 'electron', 'structure'] },
-        'ph': { name: 'pH Scale', path: './html/ph-scale/latest/ph-scale_en.html', keywords: ['ph', 'acid', 'base', 'liquid', 'alkaline'] },
-        'forces': { name: 'Forces & Motion', path: './html/forces-and-motion-basics/latest/forces-and-motion-basics_en.html', keywords: ['force', 'motion', 'push', 'friction', 'speed'] },
-        'gravity': { name: 'Gravity Lab', path: './html/gravity-force-lab/latest/gravity-force-lab_en.html', keywords: ['gravity', 'mass', 'distance', 'attract'] },
-        'ohms': { name: 'Ohms Law', path: './html/ohms-law/latest/ohms-law_en.html', keywords: ['voltage', 'ohms', 'current', 'electricity', 'circuit'] },
-        'molarity': { name: 'Molarity', path: './html/molarity/latest/molarity_en.html', keywords: ['molarity', 'solution', 'solute', 'dissolve'] },
-        'wave': { name: 'Wave Dynamics', path: './html/wave-on-a-string/latest/wave-on-a-string_en.html', keywords: ['wave', 'oscillation', 'frequency', 'amplitude'] }
+
+const simulations = [
+  { name: "Gravity Force Lab", file: "sims/gravity-force-lab.html" },
+  { name: "Energy Forms", file: "sims/energy-forms.html" },
+  { name: "Circuit Kit", file: "sims/circuit-kit.html" },
+  { name: "Projectile Motion", file: "sims/projectile-motion.html" },
+  { name: "States of Matter", file: "sims/states-of-matter.html" },
+  { name: "Wave String", file: "sims/wave-string.html" }
+];
+
+const grid = document.getElementById("grid");
+const viewer = document.getElementById("viewer");
+
+function render(list) {
+  grid.innerHTML = "";
+  list.forEach(sim => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerText = sim.name;
+
+    div.onclick = () => {
+      viewer.src = sim.file;
     };
 
-    // 2. SYSTEM BOOT
-    function boot() {
-        const menu = document.getElementById('sim-menu');
-        for (let k in ACADEMY_DB) {
-            let b = document.createElement('button');
-            b.className = 'nav-item';
-            b.textContent = ACADEMY_DB[k].name;
-            b.onclick = () => runSim(k);
-            menu.appendChild(b);
-        }
-        document.getElementById('groq-key').value = localStorage.getItem('groq_v7') || '';
-        document.getElementById('gemini-key').value = localStorage.getItem('gem_v7') || '';
-        runSim('atom'); // Initial Sim
+    grid.appendChild(div);
+  });
+}
+
+document.getElementById("search").addEventListener("input", e => {
+  const value = e.target.value.toLowerCase();
+  render(simulations.filter(s => s.name.toLowerCase().includes(value)));
+});
+
+render(simulations);
+
+function voice() {
+  const r = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  r.start();
+
+  r.onresult = e => {
+    const text = e.results[0][0].transcript.toLowerCase();
+
+    const found = simulations.find(s => text.includes(s.name.toLowerCase()));
+
+    if(found) {
+      viewer.src = found.file;
+    } else {
+      alert("Not found");
     }
+  }
+}
 
-    function runSim(key) {
-        if(!ACADEMY_DB[key]) return;
-        const frame = document.getElementById('lab-frame');
-        frame.style.opacity = '0.5';
-        frame.src = ACADEMY_DB[key].path;
-        document.getElementById('sim-title').textContent = ACADEMY_DB[key].name;
-        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.toggle('active', btn.textContent === ACADEMY_DB[key].name));
-        setTimeout(() => frame.style.opacity = '1', 500);
-    }
+</script>
 
-    function toggleApi() { const s = document.getElementById('api-config'); s.style.display = (s.style.display === 'block') ? 'none' : 'block'; }
-    
-    function saveApi() {
-        localStorage.setItem('groq_v7', document.getElementById('groq-key').value.trim());
-        localStorage.setItem('gem_v7', document.getElementById('gemini-key').value.trim());
-        toggleApi();
-        addChat("System: API Encryption Saved. Dual-Engine link established.", "nova");
-    }
-
-    // 3. VOICE ENGINE (MIC CONTROL)
-    let isRecording = false;
-    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRec();
-    recognition.continuous = true;
-    recognition.lang = 'en-US';
-
-    function toggleMic() {
-        const btn = document.getElementById('mic-trigger');
-        const hint = document.getElementById('mic-hint');
-        const mode = document.getElementById('engine-mode');
-
-        if(!isRecording) {
-            isRecording = true;
-            btn.classList.add('recording');
-            hint.textContent = "RECORDING... TAP RED TO END";
-            mode.textContent = "Status: Listening";
-            recognition.start();
-        } else {
-            isRecording = false;
-            btn.classList.remove('recording');
-            hint.textContent = "PROCESSING...";
-            mode.textContent = "Status: Thinking";
-            recognition.stop();
-        }
-    }
-
-    recognition.onresult = (e) => {
-        const text = e.results[e.results.length - 1][0].transcript;
-        processAI(text);
-    };
-
-    // 4. DUAL AI ENGINE LOGIC (GROQ MAIN, GEMINI SECONDARY)
-    async function processAI(input) {
-        if (!input.trim()) return;
-        addChat(input, "user");
-        
-        // Auto-Navigation Engine
-        for (let k in ACADEMY_DB) {
-            if (ACADEMY_DB[k].keywords.some(word => input.toLowerCase().includes(word))) {
-                runSim(k);
-                break;
-            }
-        }
-
-        const groqKey = localStorage.getItem('groq_v7');
-        const gemKey = localStorage.getItem('gem_v7');
-        let response = "Please configure your API keys to enable the AI brain.";
-
-        try {
-            if (groqKey) {
-                document.getElementById('engine-status').textContent = "PRIMARY ENGINE: GROQ";
-                response = await fetchGroq(input, groqKey);
-            } else if (gemKey) {
-                document.getElementById('engine-status').textContent = "SECONDARY ENGINE: GEMINI";
-                response = await fetchGemini(input, gemKey);
-            }
-        } catch (err) {
-            response = "Engine Timeout. Please check your internet or Ad-blocker.";
-        }
-
-        addChat(response, "nova");
-        narrate(response);
-        document.getElementById('engine-mode').textContent = "Status: Standby";
-    }
-
-    async function fetchGroq(text, key) {
-        const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${key}`, "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-                model: "llama-3.1-8b-instant", 
-                messages: [
-                    { role: "system", content: "You are Nova, a brief and helpful science tutor for NextGen Academy." },
-                    { role: "user", content: text }
-                ] 
-            })
-        });
-        if (!r.ok) throw new Error();
-        const d = await r.json();
-        return d.choices[0].message.content;
-    }
-
-    async function fetchGemini(text, key) {
-        const r = await fetch(
+</body>
+</html>
