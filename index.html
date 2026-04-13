@@ -1,152 +1,579 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NextGen Academy</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextGen Academy | Ultra Prime Smartboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ================================================================
+        1.0 CORE DESIGN SYSTEM (CSS VARIABLES)
+        ================================================================
+        */
+        :root {
+            --primary: #4facfe;
+            --primary-glow: rgba(79, 172, 254, 0.4);
+            --secondary: #00f2fe;
+            --bg-deep: #02040a;
+            --panel: rgba(13, 17, 26, 0.98);
+            --panel-border: rgba(255, 255, 255, 0.06);
+            --text-white: #f8fafc;
+            --text-dim: #64748b;
+            --mic-ready: #10b981;
+            --mic-active: #ef4444;
+            --glass: blur(20px);
+            --sidebar-left-w: 200px;
+            --sidebar-right-w: 280px;
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #020617;
-      color: white;
-    }
+        /* ================================================================
+        2.0 GLOBAL RESET & SCROLLBARS
+        ================================================================
+        */
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        
+        body, html {
+            margin: 0; padding: 0;
+            background: var(--bg-deep);
+            color: var(--text-white);
+            font-family: 'Outfit', sans-serif;
+            height: 100vh; width: 100vw;
+            overflow: hidden;
+        }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      padding: 20px;
-      background: rgba(255,255,255,0.05);
-    }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--panel-border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-    .logo { color: #38bdf8; font-weight: bold; }
+        /* ================================================================
+        3.0 LAYOUT ARCHITECTURE
+        ================================================================
+        */
+        .app-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 50%, #0f172a 0%, #02040a 100%);
+        }
 
-    .container { padding: 20px; }
+        /* SIDEBAR LEFT (SLIM LIST) */
+        .sidebar-left {
+            width: var(--sidebar-left-w);
+            background: var(--panel);
+            backdrop-filter: var(--glass);
+            border-right: 1px solid var(--panel-border);
+            display: flex;
+            flex-direction: column;
+            z-index: 50;
+            transition: var(--transition-smooth);
+        }
 
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      background: rgba(255,255,255,0.1);
-      color: white;
-    }
+        /* MAIN STAGE (CINEMA CENTER) */
+        .main-stage {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: #000;
+        }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
+        /* SIDEBAR RIGHT (TUTOR PANEL) */
+        .sidebar-right {
+            width: var(--sidebar-right-w);
+            background: var(--panel);
+            backdrop-filter: var(--glass);
+            border-left: 1px solid var(--panel-border);
+            display: flex;
+            flex-direction: column;
+            z-index: 50;
+            transition: var(--transition-smooth);
+        }
 
-    .card {
-      padding: 15px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 10px;
-      cursor: pointer;
-    }
+        /* ================================================================
+        4.0 COMPONENT STYLING
+        ================================================================
+        */
 
-    .card:hover { background: rgba(56,189,248,0.2); }
+        /* BRANDING */
+        .brand-section {
+            padding: 25px 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--panel-border);
+        }
 
-    iframe {
-      width: 100%;
-      height: 500px;
-      margin-top: 20px;
-      border: none;
-    }
+        .brand-section h1 {
+            margin: 0; font-size: 1.1rem; font-weight: 900;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: 2px; text-transform: uppercase;
+        }
 
-    .mic {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #38bdf8;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      cursor:pointer;
-    }
-  </style>
+        /* SIMULATION LIST */
+        .sim-nav {
+            flex: 1; overflow-y: auto; padding: 15px 10px;
+        }
+
+        .sim-category {
+            font-size: 0.65rem; font-weight: 800; color: var(--primary);
+            text-transform: uppercase; letter-spacing: 1.5px;
+            margin: 20px 0 10px 5px; opacity: 0.8;
+        }
+
+        .sim-item {
+            width: 100%; padding: 12px 15px; margin-bottom: 5px;
+            background: transparent; border: none; color: var(--text-dim);
+            text-align: left; cursor: pointer; border-radius: 8px;
+            font-size: 0.8rem; font-weight: 500; transition: var(--transition-fast);
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .sim-item:hover {
+            background: rgba(255,255,255,0.03); color: #fff; transform: translateX(3px);
+        }
+
+        .sim-item.active {
+            background: rgba(79, 172, 254, 0.1); color: var(--primary);
+            font-weight: 700; border-left: 3px solid var(--primary);
+        }
+
+        /* HEADER & STATUS */
+        .stage-header {
+            height: 60px; background: rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 30px; border-bottom: 1px solid var(--panel-border);
+        }
+
+        .stage-title { font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; color: #fff; }
+
+        .system-status {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 0.65rem; color: var(--mic-ready); font-weight: 800;
+        }
+
+        .status-dot {
+            width: 8px; height: 8px; background: var(--mic-ready);
+            border-radius: 50%; box-shadow: 0 0 10px var(--mic-ready);
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* VISUAL BOARD (IFRAME) */
+        .board-visual {
+            flex: 1; position: relative;
+        }
+
+        iframe {
+            width: 100%; height: 100%; border: none; background: #fff;
+        }
+
+        /* ================================================================
+        5.0 AI TUTOR (NOVA) UI
+        ================================================================
+        */
+        .tutor-header {
+            padding: 20px; border-bottom: 1px solid var(--panel-border);
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .nova-icon {
+            width: 35px; height: 35px; background: var(--primary);
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; color: #000; box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .chat-display {
+            flex: 1; overflow-y: auto; padding: 20px;
+            display: flex; flex-direction: column; gap: 15px;
+            scrollbar-width: none;
+        }
+
+        .bubble {
+            max-width: 90%; padding: 12px 16px; border-radius: 15px;
+            font-size: 0.85rem; line-height: 1.5; animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .b-nova {
+            background: rgba(255, 255, 255, 0.03); color: #e2e8f0;
+            align-self: flex-start; border-left: 3px solid var(--primary);
+        }
+
+        .b-user {
+            background: rgba(79, 172, 254, 0.08); color: var(--primary);
+            align-self: flex-end; font-style: italic; border-right: 3px solid var(--primary);
+        }
+
+        /* ================================================================
+        6.0 VOICE COMMAND CENTER (MIC)
+        ================================================================
+        */
+        .voice-control {
+            padding: 25px; border-top: 1px solid var(--panel-border);
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+        }
+
+        .mic-btn {
+            width: 65px; height: 65px; border-radius: 50%;
+            border: none; cursor: pointer; transition: var(--transition-smooth);
+            display: flex; align-items: center; justify-content: center;
+            background: var(--mic-ready);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .mic-btn.active {
+            background: var(--mic-active);
+            transform: scale(1.1);
+            animation: pulse-red 1.2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+            70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .mic-label {
+            font-size: 0.65rem; font-weight: 800; color: var(--text-dim);
+            text-transform: uppercase; letter-spacing: 1.5px;
+        }
+
+        /* ================================================================
+        7.0 SETTINGS & MODALS
+        ================================================================
+        */
+        .admin-link {
+            padding: 15px; text-align: center;
+            border-top: 1px solid var(--panel-border);
+        }
+
+        .admin-btn {
+            background: none; border: none; color: var(--text-dim);
+            font-size: 0.6rem; font-weight: 700; cursor: pointer;
+            letter-spacing: 1px; transition: 0.2s;
+        }
+
+        .admin-btn:hover { color: var(--primary); }
+
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px); z-index: 1000;
+            display: none; align-items: center; justify-content: center;
+        }
+
+        .modal-card {
+            width: 400px; background: #161b22; border: 1px solid var(--primary);
+            border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+
+        .modal-card h2 { margin: 0 0 20px 0; font-size: 1.2rem; color: #fff; }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label {
+            display: block; font-size: 0.7rem; color: var(--primary);
+            margin-bottom: 8px; font-weight: bold;
+        }
+        
+        .input-group input {
+            width: 100%; background: #0d1117; border: 1px solid #30363d;
+            color: #fff; padding: 12px; border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+        }
+
+        .save-btn {
+            width: 100%; padding: 15px; background: var(--primary);
+            border: none; border-radius: 12px; color: #000;
+            font-weight: 800; cursor: pointer; transition: 0.3s;
+        }
+
+        .save-btn:hover { transform: scale(1.02); filter: brightness(1.1); }
+
+    </style>
 </head>
-
 <body>
 
-<header>
-  <div class="logo">NextGen Academy</div>
-  <div>Teacher: Nova</div>
-</header>
+    <div class="app-container">
+        
+        <aside class="sidebar-left">
+            <div class="brand-section">
+                <h1>NEXTGEN</h1>
+                <p style="margin:5px 0 0; font-size:0.5rem; color:var(--text-dim); letter-spacing:2px;">ACADEMY OS v8.0</p>
+            </div>
 
-<div class="container">
+            <nav class="sim-nav" id="simMenu">
+                </nav>
 
-  <input type="text" id="search" placeholder="Search simulations...">
+            <div class="admin-link">
+                <button class="admin-btn" onclick="toggleModal(true)">COMMAND CENTER ⚙️</button>
+            </div>
+        </aside>
 
-  <div class="grid" id="grid"></div>
+        <main class="main-stage">
+            <header class="stage-header">
+                <div class="active-info">
+                    <span style="font-size:0.5rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px;">Visualizing Module</span>
+                    <div class="stage-title" id="activeTitle">Build an Atom</div>
+                </div>
+                
+                <div class="system-status">
+                    <div class="status-dot"></div>
+                    PRIMARY: GROQ v3.1
+                </div>
+            </header>
 
-  <iframe id="viewer"></iframe>
+            <div class="board-visual">
+                <iframe id="mainBoard" src="./html/build-an-atom/latest/build-an-atom_en.html"></iframe>
+            </div>
+        </main>
 
-</div>
+        <aside class="sidebar-right">
+            <div class="tutor-header">
+                <div class="nova-icon">N</div>
+                <div>
+                    <h2 style="margin:0; font-size:0.9rem; color:#fff;">NOVA INTELLIGENCE</h2>
+                    <span style="font-size:0.6rem; color:var(--mic-ready);">SYNCHRONIZED</span>
+                </div>
+            </div>
 
-<div class="mic" onclick="voice()">🎤</div>
+            <div class="chat-display" id="chatStream">
+                <div class="bubble b-nova">
+                    System Boot Successful. I am Nova, your scientific navigator. Click the green mic to start your lecture.
+                </div>
+            </div>
 
-<script>
+            <div class="voice-control">
+                <span class="mic-label" id="micHint">Tap Green to Start</span>
+                <button class="mic-btn" id="micBtn" onclick="handleVoiceToggle()">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                    </svg>
+                </button>
+            </div>
+        </aside>
 
-const simulations = [
-  { name: "Gravity Force Lab", file: "sims/gravity-force-lab.html" },
-  { name: "Energy Forms", file: "sims/energy-forms.html" },
-  { name: "Circuit Kit", file: "sims/circuit-kit.html" },
-  { name: "Projectile Motion", file: "sims/projectile-motion.html" },
-  { name: "States of Matter", file: "sims/states-of-matter.html" },
-  { name: "Wave String", file: "sims/wave-string.html" }
-];
+    </div>
 
-const grid = document.getElementById("grid");
-const viewer = document.getElementById("viewer");
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-card">
+            <h2>AI Infrastructure</h2>
+            
+            <div class="input-group">
+                <label>Groq API Key (Primary Engine)</label>
+                <input type="password" id="groqInput" placeholder="Paste Groq Key here...">
+            </div>
 
-function render(list) {
-  grid.innerHTML = "";
-  list.forEach(sim => {
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerText = sim.name;
+            <div class="input-group">
+                <label>Gemini API Key (Backup Engine)</label>
+                <input type="password" id="geminiInput" placeholder="Paste Gemini Key here...">
+            </div>
 
-    div.onclick = () => {
-      viewer.src = sim.file;
-    };
+            <button class="save-btn" onclick="saveConfiguration()">ACTIVATE SYSTEMS</button>
+            <p style="text-align:center; font-size:0.6rem; color:var(--text-dim); margin-top:15px; cursor:pointer;" onclick="toggleModal(false)">EXIT WITHOUT SAVING</p>
+        </div>
+    </div>
 
-    grid.appendChild(div);
-  });
-}
+    <script>
+        // ----------------------------------------------------
+        // A. DYNAMIC SIMULATION ENGINE
+        // ----------------------------------------------------
+        const DATABASE = {
+            'Chemistry': [
+                { id: 'atom', name: 'Build an Atom', folder: 'build-an-atom', keys: ['atom', 'proton', 'neutron', 'electron'] },
+                { id: 'ph', name: 'pH Scale', folder: 'ph-scale', keys: ['ph', 'acid', 'base', 'liquid'] },
+                { id: 'molarity', name: 'Molarity', folder: 'molarity', keys: ['molarity', 'solution', 'solute'] },
+                { id: 'beers', name: 'Beers Law', folder: 'beers-law-lab', keys: ['beers', 'light', 'absorbance'] }
+            ],
+            'Physics': [
+                { id: 'forces', name: 'Forces & Motion', folder: 'forces-and-motion-basics', keys: ['force', 'motion', 'friction', 'push'] },
+                { id: 'gravity', name: 'Gravity Lab', folder: 'gravity-force-lab', keys: ['gravity', 'mass', 'attract'] },
+                { id: 'waves', name: 'Wave Dynamics', folder: 'wave-on-a-string', keys: ['wave', 'vibration', 'amplitude'] },
+                { id: 'ohms', name: 'Ohms Law', folder: 'ohms-law', keys: ['voltage', 'ohms', 'current', 'electricity'] }
+            ]
+        };
 
-document.getElementById("search").addEventListener("input", e => {
-  const value = e.target.value.toLowerCase();
-  render(simulations.filter(s => s.name.toLowerCase().includes(value)));
-});
+        function initSidebar() {
+            const menu = document.getElementById('simMenu');
+            for (let category in DATABASE) {
+                let label = document.createElement('div');
+                label.className = 'sim-category';
+                label.textContent = category;
+                menu.appendChild(label);
 
-render(simulations);
+                DATABASE[category].forEach(sim => {
+                    let btn = document.createElement('button');
+                    btn.className = 'sim-item';
+                    btn.innerHTML = sim.name;
+                    btn.onclick = () => launchSimulation(sim);
+                    btn.id = `btn-${sim.id}`;
+                    menu.appendChild(btn);
+                });
+            }
+        }
 
-function voice() {
-  const r = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-  r.start();
+        function launchSimulation(sim) {
+            const frame = document.getElementById('mainBoard');
+            const path = `./html/${sim.folder}/latest/${sim.folder}_en.html`;
+            
+            frame.style.opacity = '0';
+            setTimeout(() => {
+                frame.src = path;
+                document.getElementById('activeTitle').textContent = sim.name;
+                document.querySelectorAll('.sim-item').forEach(b => b.classList.remove('active'));
+                document.getElementById(`btn-${sim.id}`).classList.add('active');
+                frame.style.opacity = '1';
+            }, 300);
 
-  r.onresult = e => {
-    const text = e.results[0][0].transcript.toLowerCase();
+            addNovaMessage(`Module Switched: Initializing <strong>${sim.name}</strong> visualizer.`);
+        }
 
-    const found = simulations.find(s => text.includes(s.name.toLowerCase()));
+        // ----------------------------------------------------
+        // B. VOICE & AI CORE (GROQ + GEMINI)
+        // ----------------------------------------------------
+        let isListening = false;
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.lang = 'en-US';
 
-    if(found) {
-      viewer.src = found.file;
-    } else {
-      alert("Not found");
-    }
-  }
-}
+        function handleVoiceToggle() {
+            const btn = document.getElementById('micBtn');
+            const hint = document.getElementById('micHint');
 
-</script>
+            if (!isListening) {
+                isListening = true;
+                btn.classList.add('active');
+                hint.textContent = "RECORDING... TAP RED TO END";
+                recognition.start();
+            } else {
+                isListening = false;
+                btn.classList.remove('active');
+                hint.textContent = "PROCESSING...";
+                recognition.stop();
+            }
+        }
 
+        recognition.onresult = (event) => {
+            const transcript = event.results[event.results.length - 1][0].transcript;
+            processUserIntent(transcript);
+        };
+
+        async function processUserIntent(input) {
+            addChatMessage(input, 'user');
+            
+            // 1. Auto-Navigation Logic
+            let targetSim = null;
+            for (let cat in DATABASE) {
+                DATABASE[cat].forEach(s => {
+                    if (s.keys.some(k => input.toLowerCase().includes(k))) targetSim = s;
+                });
+            }
+            if (targetSim) launchSimulation(targetSim);
+
+            // 2. AI Response Logic
+            const groqKey = localStorage.getItem('nx_groq');
+            const gemKey = localStorage.getItem('nx_gemini');
+            
+            let response = "API Keys Missing. Please open Command Center to connect AI engines.";
+
+            try {
+                if (groqKey) {
+                    response = await fetchGroqAI(input, groqKey);
+                } else if (gemKey) {
+                    response = await fetchGeminiAI(input, gemKey);
+                }
+            } catch (e) {
+                response = "Connection Error. Check your API configuration and Ad-Blocker.";
+            }
+
+            addNovaMessage(response);
+            narrate(response);
+        }
+
+        async function fetchGroqAI(text, key) {
+            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${key}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    model: "llama-3.1-8b-instant", 
+                    messages: [{ role: "system", content: "You are Nova, an AI tutor. Be concise." }, { role: "user", content: text }] 
+                })
+            });
+            const data = await res.json();
+            return data.choices[0].message.content;
+        }
+
+        async function fetchGeminiAI(text, key) {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Explain briefly: ${text}` }] }] })
+            });
+            const data = await res.json();
+            return data.candidates[0].content.parts[0].text;
+        }
+
+        // ----------------------------------------------------
+        // C. UI UTILITIES
+        // ----------------------------------------------------
+        function addChatMessage(text, sender) {
+            const stream = document.getElementById('chatStream');
+            const div = document.createElement('div');
+            div.className = `bubble b-${sender}`;
+            div.textContent = text;
+            stream.appendChild(div);
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        function addNovaMessage(html) {
+            const stream = document.getElementById('chatStream');
+            const div = document.createElement('div');
+            div.className = `bubble b-nova`;
+            div.innerHTML = html;
+            stream.appendChild(div);
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        function narrate(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.1;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function toggleModal(show) {
+            document.getElementById('settingsModal').style.display = show ? 'flex' : 'none';
+        }
+
+        function saveConfiguration() {
+            localStorage.setItem('nx_groq', document.getElementById('groqInput').value.trim());
+            localStorage.setItem('nx_gemini', document.getElementById('geminiInput').value.trim());
+            toggleModal(false);
+            addNovaMessage("AI Satellite Links Updated Successfully.");
+        }
+
+        // ----------------------------------------------------
+        // D. SYSTEM BOOT
+        // ----------------------------------------------------
+        window.onload = () => {
+            initSidebar();
+            document.getElementById('groqInput').value = localStorage.getItem('nx_groq') || '';
+            document.getElementById('geminiInput').value = localStorage.getItem('nx_gemini') || '';
+            console.log("NextGen Academy OS v8.0 Booted.");
+        };
+
+    </script>
 </body>
 </html>
